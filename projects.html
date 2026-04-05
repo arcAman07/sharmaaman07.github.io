@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Aman Sharma</title>
+    <meta name="description" content="Research tools, AI systems, and open-source projects by Aman Sharma. Google Summer of Code, MLH Fellowship, and more.">
+    <link rel="canonical" href="https://sharmaaman07.vercel.app/projects.html">
+    <meta property="og:title" content="Projects - Aman Sharma">
+    <meta property="og:description" content="Research tools, AI systems, and open-source projects by Aman Sharma.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sharmaaman07.vercel.app/projects.html">
+    <meta property="og:image" content="https://sharmaaman07.vercel.app/assets/img/profile.jpg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@inceptmyth">
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div id="progress"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">Aman Sharma</a>
+            <div style="display:flex;align-items:center;gap:0;">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="publications.html">Research</a></li>
+                    <li><a href="projects.html" class="active">Projects</a></li>
+                </ul>
+                <div class="nav-right">
+                    <button id="light-toggle" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+                    <button class="nav-toggle" id="menuToggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Projects</h1>
+            <p>A mix of research tools, AI systems, and things I've built for fun.</p>
+        </div>
+
+        <h2 class="proj-category">AI / ML</h2>
+        <ul class="proj-list">
+            <li>
+                <strong>TexGuardian</strong> - Claude Code, but for LaTeX. Interactive CLI that reads your .tex/.bib files, understands venue requirements (NeurIPS, ICLR, double-blind, camera-ready), and fixes issues via reviewable diff patches. 7-step pipeline covering compile, LLM-patch, citation validation, figure analysis, and a vision model loop that catches layout problems from rendered PDF pages.
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07/TexGuardian" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+            </li>
+            <li>
+                <strong>ESP32 SENSE Vision Glasses</strong> - Wearable AI assistant with personalized voice, dynamic memory module, real-time life tracking, MCP server connectivity, and Bluetooth voice interaction for hands-free operation.
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07" target="_blank"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </li>
+            <li>
+                <strong>Samantha MCP Memory Manager</strong> - MCP server that extracts multi-dimensional user memory from LLM conversations. VARK learning profiles, knowledge graph construction, and preference tracking for personalized AI.
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07/samantha_mcp" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+            </li>
+            <li>
+                <strong>ResearchPal</strong> - AI-powered research tool with semantic paper search, multi-document comparison, and automated code generation from scientific literature.
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07/research_pal" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+            </li>
+            <li>
+                <strong>Cleo AI Research Assistant</strong> - Voice-enabled research assistant integrating Whisper ASR, wake word detection, voice cloning, document processing, and multi-LLM support.
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07" target="_blank"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </li>
+            <li>
+                <strong>Memer.AI</strong> - Meme generation app using ResNet+LSTM with transfer learning for image understanding and caption generation. Sub-second response times. <strong>3,000+ users.</strong>
+                <div class="proj-links">
+                    <a href="https://github.com/arcAman07" target="_blank"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </li>
+        </ul>
+
+        <h2 class="proj-category">Computer Vision</h2>
+        <ul class="proj-list">
+            <li>
+                <strong>Marble Scratch Detection System</strong> - Computer vision quality control for marble manufacturing. 92% defect detection accuracy, optimized for Raspberry Pi with 1.2s processing time per image.
+            </li>
+        </ul>
+
+        <h2 class="proj-category">Open Source</h2>
+        <ul class="proj-list">
+            <li>
+                <strong>Google Summer of Code 2022</strong> - NumFOCUS / DiffImages.jl. Implemented 12+ automatic differentiation rules for image processing operations in Julia. 3x performance improvement. All contributions merged.
+                <div class="proj-links">
+                    <a href="https://github.com/FluxML/Flux.jl" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+            </li>
+            <li>
+                <strong>Hubble Protocol Liquidation Bot</strong> - High-performance liquidation bot in Rust for Solana smart contracts. 99.8% production uptime, 35% throughput improvement.
+            </li>
+        </ul>
+
+        <hr>
+
+        <!-- Experience section -->
+        <section class="section">
+            <h2>Experience</h2>
+            <ul class="exp-list">
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org">Georgia Institute of Technology</span>
+                        <span class="exp-date">Fall 2026 (Upcoming)</span>
+                    </div>
+                    <div class="exp-role">MS in Computer Science</div>
+                </li>
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org">Lossfunk AI Lab</span>
+                        <span class="exp-date">Jun 2025 - Present</span>
+                    </div>
+                    <div class="exp-role">Researcher</div>
+                    <div class="exp-desc">Building AI systems that adapt to new domains - continual learning, persistent memory for LLMs on OOD domains, test-time adaptation, and sample-efficient training and inference.</div>
+                </li>
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org"><a href="https://iceberg.mit.edu" target="_blank" style="color:inherit;text-decoration:none;">MIT Media Lab - Large Population Models</a></span>
+                        <span class="exp-date">Feb 2024 - Present</span>
+                    </div>
+                    <div class="exp-role">Researcher with <a href="https://www.media.mit.edu/people/ayushc/overview/" target="_blank">Ayush Chopra</a></div>
+                    <div class="exp-desc">Vectorized agent-based simulations (AgentTorch). Developed the Ripple Effect Protocol for decentralized multi-agent alignment with MIT &amp; Cisco.</div>
+                </li>
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org">Ikigai Labs</span>
+                        <span class="exp-date">May - Oct 2023</span>
+                    </div>
+                    <div class="exp-role">ML Engineer</div>
+                    <div class="exp-desc">Benchmarked LLMs vs traditional ML for text classification (93% vs 65%). Built testing framework reducing model error rates by 15%.</div>
+                </li>
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org">NumFOCUS - Google Summer of Code</span>
+                        <span class="exp-date">Jun - Sep 2022</span>
+                    </div>
+                    <div class="exp-role">Software Developer</div>
+                    <div class="exp-desc">12+ automatic differentiation rules for image processing in Julia. 3x performance improvement.</div>
+                </li>
+                <li>
+                    <div class="exp-head">
+                        <span class="exp-org">Hubble Protocol - MLH Fellowship</span>
+                        <span class="exp-date">May - Jul 2022</span>
+                    </div>
+                    <div class="exp-role">Software Developer</div>
+                    <div class="exp-desc">High-performance liquidation bot in Rust for Solana. 99.8% uptime, 35% throughput improvement.</div>
+                </li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <!-- Academics -->
+        <section class="section">
+            <h2>Academics &amp; Awards</h2>
+            <div class="edu-item" style="margin-bottom: 12px;">
+                <span class="edu-icon">&#127891;</span>
+                <div>
+                    <div class="edu-name">Georgia Institute of Technology</div>
+                    <div class="edu-deg">MS, Computer Science</div>
+                    <div class="edu-meta">Fall 2026 (Upcoming)</div>
+                </div>
+            </div>
+            <div class="edu-item">
+                <span class="edu-icon">&#127891;</span>
+                <div>
+                    <div class="edu-name">Vellore Institute of Technology</div>
+                    <div class="edu-deg">B.Tech, Computer Science and Engineering</div>
+                    <div class="edu-meta">2020</div>
+                </div>
+            </div>
+            <ul class="awards-list">
+                <li>Won <strong>12+ hackathons</strong> - HackUPC, DevSoc'21, Bhilai Hacks, HackX 2021</li>
+                <li><strong>Google Summer of Code Fellow</strong>, 2022</li>
+                <li><strong>ML Head &amp; Inner Core</strong>, Google Developer Student Clubs VIT - 15+ workshops, Devjams (500+ participants)</li>
+                <li><strong>Project Manager</strong>, OpInCo Community - 200+ merged PRs to open-source</li>
+                <li><strong>Trinity College London</strong> Level 5 - Advanced Communication Skills</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="container">&copy; 2026 Aman Sharma. All rights reserved.</div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script data-goatcounter="https://amananytime07.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

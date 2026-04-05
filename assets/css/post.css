@@ -1,0 +1,180 @@
+/* ============ Blog Post Page Styles ============ */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+.back-link:hover { color: var(--theme); text-decoration: none; }
+
+.post-page-title {
+    font-size: 2.2rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 8px;
+}
+
+.post-page-meta {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.post-page-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.post-page-tags .tag {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 2px 10px;
+    border-radius: 3px;
+    border: 1px solid var(--divider);
+    color: var(--text-light);
+}
+
+.post-header {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--divider);
+    margin-bottom: 2rem;
+}
+
+/* ============ Post Body ============ */
+.post-body {
+    max-width: 700px;
+    padding-bottom: 3rem;
+}
+
+.post-body h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-top: 2.5rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--divider);
+}
+
+.post-body h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+}
+
+.post-body p {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.85;
+    margin-bottom: 1.2rem;
+}
+
+.post-body a {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+}
+.post-body a:hover { text-decoration-style: solid; }
+
+.post-body strong { font-weight: 500; }
+
+.post-body code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+    background: var(--divider);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.post-body pre {
+    background: var(--card-bg);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.post-body pre code {
+    background: none;
+    padding: 0;
+    font-size: 14px;
+}
+
+.post-body blockquote {
+    border-left: 4px solid var(--theme);
+    margin: 1.5rem 0;
+    padding: 0.8rem 1.2rem;
+    background: var(--card-bg);
+    font-style: italic;
+}
+
+.post-body blockquote p { margin-bottom: 0; }
+
+.post-body ul, .post-body ol {
+    padding-left: 24px;
+    margin-bottom: 1.2rem;
+}
+
+.post-body li {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 4px;
+}
+
+.post-body img {
+    max-width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--divider);
+}
+
+.post-body figure {
+    margin: 2rem 0;
+}
+
+.post-body figcaption {
+    font-size: 13px;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.post-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 14px;
+}
+
+.post-body table th,
+.post-body table td {
+    padding: 8px 12px;
+    border: 1px solid var(--divider);
+    text-align: left;
+}
+
+.post-body table th {
+    font-weight: 500;
+    background: var(--card-bg);
+}
+
+/* MathJax display equations */
+.post-body .MathJax_Display,
+.post-body mjx-container[display="true"] {
+    margin: 1.5rem 0 !important;
+    overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+    .post-page-title { font-size: 1.6rem; }
+}
