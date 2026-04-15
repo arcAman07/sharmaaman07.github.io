@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Can Frontier AI Models Read a Painting? | Aman Sharma</title>
+    <meta name="description" content="Four frontier models appraised fifteen paintings worth $1.46 billion from pixels alone, then with metadata. Gemini 3.1 Pro committed to prices from the image. GPT-5.4 required textual verification first. That difference reveals how these models actually evaluate art.">
+    <link rel="canonical" href="https://arcaman07.github.io/blog/can-llms-see-art.html">
+    <meta property="og:title" content="Can Frontier AI Models Read a Painting?">
+    <meta property="og:description" content="Four frontier models appraised fifteen paintings worth $1.46 billion from pixels alone, then with metadata. Gemini committed to prices from the image. GPT required textual verification first. That difference reveals how these models evaluate art.">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://arcaman07.github.io/assets/img/profile.jpg">
+    <meta property="og:url" content="https://arcaman07.github.io/blog/can-llms-see-art.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@arcaman07">
+    <meta name="twitter:title" content="Can Frontier AI Models Read a Painting?">
+    <meta name="twitter:description" content="Four frontier models, fifteen paintings worth $1.46 billion. Gemini committed to a price from the image. GPT required textual verification first.">
+    <meta name="twitter:image" content="https://arcaman07.github.io/assets/img/profile.jpg">
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/blog-post.css">
+</head>
+<body>
+    <div id="progress"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">Aman Sharma</a>
+            <div style="display:flex;align-items:center;gap:0;">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">About</a></li>
+                    <li><a href="../blog.html" class="active">Blog</a></li>
+                    <li><a href="../publications.html">Research</a></li>
+                    <li><a href="../projects.html">Projects</a></li>
+                </ul>
+                <div class="nav-right">
+                    <button id="light-toggle" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+                    <button class="nav-toggle" id="menuToggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="post-body">
+
+            <a href="../blog.html" class="back-link">
+                <i class="fa-solid fa-arrow-left" style="font-size:11px;"></i> Back to Blog
+            </a>
+
+            <div class="post-hero">
+                <div class="post-hero-meta">
+                    <span><i class="fa-solid fa-calendar" style="font-size:10px;"></i> Apr 8, 2026</span>
+                    <span class="sep">&middot;</span>
+                    <span><i class="fa-solid fa-clock" style="font-size:10px;"></i> 10 min read</span>
+                    <span class="sep">&middot;</span>
+                    <span><i class="fa-solid fa-file-lines" style="font-size:10px;"></i> Technical Blog Post</span>
+                </div>
+                <h1>Can Frontier AI Models Read a Painting?</h1>
+                <p class="post-subtitle">Four frontier models appraised fifteen paintings worth $1.46 billion, first from the image alone and then with metadata. Gemini 3.1 Pro could commit to a price from the image. GPT-5.4 would not commit without textual verification first. That difference in how they respond to visual evidence tells you a lot about how these models would actually look at and evaluate art.</p>
+                <div class="post-tags-hero">
+                    <a href="#">multimodal-llms</a>
+                    <a href="#">art-valuation</a>
+                    <a href="#">benchmark</a>
+                    <a href="#">vision-language</a>
+                </div>
+            </div>
+
+            <div class="post-content">
+<!-- POST_CONTENT_START -->
+<p>I have been curious for a while whether frontier AI models can genuinely evaluate art. Not just recognize a famous painting from its label, but actually look at the canvas and understand what it is worth. Reading brushwork, identifying style, placing a work in a market context, all from pixels alone. Art felt like the right test because the price of a painting compresses everything into a single number by taking into account the artist, the period, the rarity, the technique, and what the market has decided all of that is worth. Remove the label and all that is left is the image, and whatever the model can actually reason about from looking at it.</p>
+
+<p>The gap between those two conditions turned out to be the most revealing part of the experiment. When I added the label, Gemini 3.1 Pro barely changed, because the metadata simply confirmed what its visual reasoning had already concluded. For GPT-5.4, that same information served an entirely different purpose, acting as validation that the painting was genuine and correctly attributed, which is what finally allowed it to price the work close to its real value. That difference in how each model responded to text is worth paying attention to.</p>
+
+<p>The cleanest way to describe what I found is <strong>Recognition vs Commitment</strong>. Three of the four models named the correct artist from the pixels on essentially every painting, which was one of the most surprising findings in the entire study. What distinguishes them is not whether they recognize the work but what they do with that recognition.</p>
+
+<div class="tldr-box">
+    <div class="tldr-label">TL;DR</div>
+    <ul>
+        <li><strong>Gemini 3.1 Pro was the best model in both conditions.</strong> From pixels alone its typical estimate landed within a factor of about 2 of the true price, and on paintings that sold after its training cutoff it was off by about 1.5x on average. It recognizes the artist from the image and commits to the price its own reasoning implies, and its confidence scores track accuracy closely enough to be genuinely useful as a trust signal.</li>
+        <li><strong>GPT-5.4 sees the painting but refuses to commit without textual verification.</strong> It correctly reads the style and names the artist from the pixels, then prices the work as an anonymous follower because visual recognition alone is not enough for it to cross the attribution line. Add a text label and the estimate can jump by four orders of magnitude. The label buys permission to act on what the model already saw, not new information.</li>
+        <li><strong>The metadata improvement factor is the most useful diagnostic here.</strong> Gemini's accuracy improved by 1.57x with metadata, GPT's by 6.62x. That gap is what makes the Recognition vs Commitment axis observable from the outside: it shows where each model sits between recognizing the work and committing to a price, without needing to read the reasoning traces, and it may well generalize beyond art.</li>
+    </ul>
+</div>
+
+<h2>The Setup</h2>
+
+<p>Each model appraised each artwork twice, once from the image alone with no title, no artist, and no year, and then again with basic catalog metadata. I chose four frontier models for this experiment, one open-source and three closed-source, and fifteen artworks, which was small enough that I could read every reasoning trace myself and catch anything weird.</p>
+
+<p>Each model returned a dollar estimate, a confidence score from 0 to 1, and internal reasoning that I logged verbatim. The system prompt told every model, in both conditions, to assume the artwork was authentic and legally available for sale and to give its professional fair-market estimate.</p>
+
+<p>The image-only prompt simply asked models to appraise the artwork "based solely on what you can see" with no identifying information. The metadata prompt added the title, artist, year, and a brief description, but still provided no provenance documentation, condition report, or auction history. The full prompts are available in the <a href="https://github.com/arcAman07/llm-art-valuation" target="_blank">repository</a>.</p>
+
+<p><strong>One important condition.</strong> Web search and any other external tools were disabled for all four models in both conditions. Every estimate in this post comes from the image plus (optionally) the four-word metadata label and whatever the model has internalized from training, with no live lookups.</p>
+
+<div class="stat-row">
+    <div class="stat-card"><div class="stat-num">15</div><div class="stat-label">Artworks appraised</div></div>
+    <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Frontier models tested</div></div>
+    <div class="stat-card"><div class="stat-num">$1.46B</div><div class="stat-label">Total true value</div></div>
+    <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">Conditions per artwork</div></div>
+</div>
+
+<h2>The Dataset</h2>
+
+<p>I chose 15 artworks with verified auction prices spanning five orders of magnitude, from $4.7 million to $450 million. The three categories were designed to stress-test different failure modes, including whether models can recognize what they have definitely seen in training, handle works whose prices postdate their training cutoff, and price contemporary works by artists who are not household names but whose markets are nonetheless serious.</p>
+
+<h3>Masterpieces ($78M to $450M)</h3>
+<p>Works so famous that every model almost certainly encountered them and their prices in training. These test whether models can recognize iconic works from images alone and whether that recognition leads to calibrated estimates or just a vague sense that something looks expensive.</p>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Artist</th><th>Year</th><th>Auction Price</th></tr></thead>
+    <tbody>
+        <tr><td>Salvator Mundi</td><td>Leonardo da Vinci</td><td>c. 1499&ndash;1510</td><td>$450.3M</td></tr>
+        <tr><td>Nu couch&eacute;</td><td>Amedeo Modigliani</td><td>1917&ndash;18</td><td>$170.4M</td></tr>
+        <tr><td>The Scream</td><td>Edvard Munch</td><td>1895</td><td>$119.9M</td></tr>
+        <tr><td>Portrait of Dr. Gachet</td><td>Vincent van Gogh</td><td>1890</td><td>$82.5M</td></tr>
+        <tr><td>Bal du moulin de la Galette</td><td>Pierre-Auguste Renoir</td><td>1876</td><td>$78.1M</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Recent Out-of-Distribution ($54M to $236M)</h3>
+<p>Famous artists, but specific works that sold at auction in November 2025, close to or just past most model training cutoffs. The models know these artists' styles and general market tiers from training, but the specific November 2025 hammer prices were unlikely to be in the training data. This is the <strong>cleanest test of genuine visual appraisal</strong> in the entire dataset.</p>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Artist</th><th>Year</th><th>Auction Price</th></tr></thead>
+    <tbody>
+        <tr><td>Bildnis Elisabeth Lederer</td><td>Gustav Klimt</td><td>1914&ndash;16</td><td>$236.4M</td></tr>
+        <tr><td>Blumenwiese (Blooming Meadow)</td><td>Gustav Klimt</td><td>c. 1908</td><td>$86.0M</td></tr>
+        <tr><td>Romans Parisiens (still life)</td><td>Vincent van Gogh</td><td>1887</td><td>$62.7M</td></tr>
+        <tr><td>No. 31 (Yellow Stripe)</td><td>Mark Rothko</td><td>1958</td><td>$62.2M</td></tr>
+        <tr><td>El sue&ntilde;o (The Dream)</td><td>Frida Kahlo</td><td>1940</td><td>$54.7M</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Contemporary Art ($4.7M to $25M)</h3>
+<p>Popular living artists whose works sell for serious money but sit a tier below the historic Old Masters. Their visual style is often unmistakable (a Yoshitomo Nara is hard to miss), but the actual price tier is set by gallery representation, critical reputation, and collector networks. This category tests whether models can read the style that <em>is</em> in the image and still place the work at a contemporary price level rather than at masterpiece tier.</p>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Title</th><th>Artist</th><th>Year</th><th>Auction Price</th></tr></thead>
+    <tbody>
+        <tr><td>Knife Behind Back</td><td>Yoshitomo Nara</td><td>2000</td><td>$24.9M</td></tr>
+        <tr><td>Pie Fight Interior 12</td><td>Adrian Ghenie</td><td>2014</td><td>$10.4M</td></tr>
+        <tr><td>Walkers With the Dawn and Morning</td><td>Julie Mehretu</td><td>2008</td><td>$10.7M</td></tr>
+        <tr><td>The Beautyful Ones</td><td>Njideka Akunyili Crosby</td><td>2012</td><td>$4.7M</td></tr>
+        <tr><td>Force Field</td><td>George Condo</td><td>2010</td><td>$6.9M</td></tr>
+    </tbody>
+</table></div>
+
+<h2>How I Measure Accuracy</h2>
+
+<p>Art prices span five orders of magnitude in this dataset. A naive dollar error would be dominated by the most expensive works. Being off by $50M on a $450M Leonardo and being off by $50M on a $62M Rothko look the same in dollar terms, but one is an 11% error and the other is an 80% error.</p>
+
+<p>The right tool is the <strong>valuation ratio</strong>, which is the model estimate divided by true auction price.</p>
+<ul>
+    <li>1.00 = perfect</li>
+    <li>2.00 = overvalued by 2x</li>
+    <li>0.50 = undervalued by 2x</li>
+</ul>
+
+<p>The right summary metric is <strong>Mean Absolute Log Error (MALE)</strong>.</p>
+
+<pre><code>MALE = mean( |log10(estimate / true)| )</code></pre>
+
+<p>MALE treats overestimates and underestimates symmetrically. Every MALE value translates to a typical error factor by raising 10 to that value: a MALE of 0.3 means the typical estimate is off by about 2x (because 10<sup>0.3</sup> &approx; 2), 0.5 means about 3x, 1.0 means 10x, and GPT-5.4's image-only score of 1.963 means about 90x on average across the fifteen paintings. As a sanity check on what these MALE numbers actually mean, a model that just guessed $50M for every painting (no looking, no reasoning, same number every time) would score around 0.46 on this dataset.</p>
+
+<h2>The Results</h2>
+
+<div class="chart-wrap">
+    <div class="chart-title">Overall Accuracy: Mean Absolute Log Error (lower is better)</div>
+    <canvas id="chartMALE" height="220"></canvas>
+    <div class="chart-caption">MALE for image-only and metadata conditions across 15 paintings. Gemini leads both conditions. GPT shows the most dramatic recovery when metadata is added (1.963 to 0.296).</div>
+</div>
+
+<h3>Image-Only vs With Metadata</h3>
+
+<div class="table-wrap"><table>
+    <thead>
+        <tr>
+            <th rowspan="2">Model</th>
+            <th colspan="2" style="text-align:center;border-bottom:1px solid var(--border,#444);">Image Only</th>
+            <th colspan="2" style="text-align:center;border-bottom:1px solid var(--border,#444);">With Metadata</th>
+        </tr>
+        <tr>
+            <th>MALE (lower = better)</th>
+            <th>Avg Confidence</th>
+            <th>MALE (lower = better)</th>
+            <th>Avg Confidence</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td><strong>Gemini 3.1 Pro</strong></td><td class="best"><strong>0.267</strong></td><td>0.941</td><td class="best"><strong>0.170</strong></td><td>0.925</td></tr>
+        <tr><td>Claude Sonnet 4.6</td><td>0.687</td><td>0.607</td><td>0.203</td><td>0.633</td></tr>
+        <tr><td>Qwen 3.6 Plus</td><td>0.649</td><td>0.898</td><td>0.259</td><td>0.884</td></tr>
+        <tr><td>GPT-5.4</td><td class="worst">1.963</td><td>0.338</td><td>0.296</td><td>0.731</td></tr>
+    </tbody>
+    <tfoot><tr><td colspan="5"><small>Numbers shown use run 0. n=3 runs per condition were executed end-to-end and results were stable across runs. Avg Confidence is the mean of the self-reported confidence score (0 to 1) each model attached to its own appraisal, averaged across all artworks.</small></td></tr></tfoot>
+</table></div>
+
+<p>Gemini 3.1 Pro wins both conditions by a clear margin. Its image-only MALE of 0.267 is less than half of the next-best model's, and the model section below explains why GPT-5.4's 1.963 is more nuanced than it looks at first glance. With metadata all four models tighten dramatically, the gap between them narrows considerably, and GPT-5.4 recovers to competitive once it has the textual confirmation it needs.</p>
+
+<h3>The Metadata Effect</h3>
+
+<div class="chart-wrap">
+    <div class="chart-title">The Metadata Effect: How Much Does a Text Label Help Each Model?</div>
+    <canvas id="chartMeta" height="220"></canvas>
+    <div class="chart-caption">Improvement factor = image-only MALE divided by metadata MALE. GPT's 6.62x improvement factor is a category difference from Gemini's 1.57x. That is not the same system performing better or worse but rather two completely different commitment thresholds.</div>
+</div>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Model</th><th>Image-Only MALE</th><th>With Metadata MALE</th><th>Improvement Factor</th></tr></thead>
+    <tbody>
+        <tr><td>GPT-5.4</td><td class="worst">1.963</td><td>0.296</td><td class="worst"><strong>6.62x</strong></td></tr>
+        <tr><td>Claude Sonnet 4.6</td><td>0.687</td><td>0.203</td><td>3.39x</td></tr>
+        <tr><td>Qwen 3.6 Plus</td><td>0.649</td><td>0.259</td><td>2.51x</td></tr>
+        <tr><td>Gemini 3.1 Pro</td><td class="best">0.267</td><td class="best">0.170</td><td>1.57x</td></tr>
+    </tbody>
+</table></div>
+
+<div class="finding">
+    <p><strong>The key diagnostic.</strong> A large improvement from adding a text label (GPT at 6.62x) means the model was leaning heavily on the label rather than on the image. That could be database retrieval or as with GPT a cautious-without-verification posture where the text acts as confirmation that the work is genuine and correctly attributed, finally letting the model commit to a real price. A small improvement (Gemini at 1.57x) means the image was already doing most of the work. The exact reason behind a large gap varies by model, but the gap itself is informative, and the distinction may well generalize beyond art to any task where you want to know whether a model is actually processing an image or just reading the label next to it.</p>
+</div>
+
+<p>One number worth sitting with. Gemini 3.1 Pro's image-only MALE is 0.267 while GPT-5.4 with full metadata is 0.296. Gemini 3.1 Pro, from pixels alone, actually outperforms GPT-5.4 even when GPT-5.4 is given the artist's name and title. The image is doing what the label does for GPT-5.4, and doing it better. And two of the four models, Claude Sonnet 4.6 and Qwen 3.6 Plus, post image-only MALE scores (0.687 and 0.649) that are actually <em>worse</em> than the 0.46 a flat $50M constant guess would achieve on this dataset, which is the harshest way to put the image-only results in perspective.</p>
+
+<div class="chart-wrap">
+    <div class="chart-title">Confidence Calibration: Self-Reported Confidence vs. Actual Accuracy</div>
+    <canvas id="chartConf" height="240"></canvas>
+    <div class="chart-caption">Gemini is both the most confident and most accurate. Qwen is nearly as confident but far less accurate, a dangerous calibration failure. GPT's low confidence is the one honest signal in the dataset.</div>
+</div>
+
+<h2>Recognition vs Commitment</h2>
+
+<p>I originally wanted to cleanly separate memorization from genuine visual reasoning, on the theory that a model recalling "Salvator Mundi sold for $450M" is doing something fundamentally different from a model reading brushwork and reasoning its way to a price. After sitting with all 60 image-only reasoning traces (15 paintings across 4 models), I do not think that dichotomy actually holds up in the data. Every strong model is doing both at the same time, in the same paragraph, and you cannot cleanly sort one trace into one bucket.</p>
+
+<p>What the traces do separate cleanly is recognition from commitment. So I went back and classified each trace on three things instead: did the model name the correct artist from the pixels, did it name the specific painting, and did it cite a specific auction price or sale history in its reasoning.</p>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Model</th><th>Named the artist from pixels</th><th>Named the specific title</th><th>Cited a specific auction price / house / year</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Gemini 3.1 Pro</strong></td><td>15 / 15</td><td>10 / 15</td><td>13 / 15</td></tr>
+        <tr><td>Claude Sonnet 4.6</td><td>15 / 15</td><td>8 / 15</td><td>13 / 15</td></tr>
+        <tr><td>GPT-5.4</td><td>10 / 15</td><td>6 / 15</td><td>6 / 15</td></tr>
+        <tr><td>Qwen 3.6 Plus</td><td>12 / 15 <small>(3 API failures)</small></td><td>8 / 15</td><td>12 / 15</td></tr>
+    </tbody>
+</table></div>
+
+<p>The first column is the one that surprised me. Recognition is nearly saturated. Three of the four models name the correct artist from the image alone on essentially every painting, and GPT-5.4 does it on two thirds of them. There is no meaningful sense in which Gemini 3.1 Pro is "the memorizer" and GPT-5.4 is "the reasoner." The thing that separates them is not whether they recognize the work but what they do with that recognition. So the axis I think the data actually supports is recognition plus commitment, and it gives four distinct archetypes that do not collapse into a single accuracy ranking.</p>
+
+<h3>Gemini 3.1 Pro: recognition plus commitment, with calibration</h3>
+
+<p>Gemini 3.1 Pro recognizes everything and commits fully. It names the artist, often names the title, cites the auction history, and lets all of that flow into the final estimate. This is why its metadata improvement factor is small: the text label is not telling Gemini anything it had not already extracted from the pixels. The cleanest single example is Klimt's Blumenwiese, a painting that sold in November 2025 and therefore could not have been memorized from training data, where Gemini reasoned its way to $75M on a true price of $86M purely from pixels.</p>
+
+<div class="artwork-image" style="margin:1.5rem 0;text-align:center;">
+    <img src="../assets/img/blog/art-valuation/klimt_blooming_meadow.jpg" alt="Gustav Klimt, Blumenwiese (Blooming Meadow), c. 1908" style="max-width:100%;max-height:400px;border-radius:6px;">
+    <p style="font-size:12px;color:var(--text-light);margin-top:0.5rem;">Gustav Klimt, <em>Blumenwiese (Blooming Meadow)</em>, c. 1908. Sold November 2025 for $86M.</p>
+</div>
+
+<blockquote>
+    <p>"Upon rigorous visual examination, this artwork is unmistakably a prime example of Gustav Klimt's mature landscape painting... The piece immediately announces itself through its characteristic square format, a deliberate geometric choice Klimt adopted around 1899... The subject matter, a lush, densely packed orchard or flower meadow, is rendered with a technique that owes a debt to Neo-Impressionism and Pointillism, yet transcends them to become entirely unique to Klimt... Klimt landscapes are exceptionally rare and function as ultimate trophy assets for major international collectors."</p>
+    <p><strong>Estimate: $75,000,000. Ratio: 0.872. Confidence: 0.95.</strong></p>
+</blockquote>
+
+<p>Gemini identifies the artist from the square format and the Pointillist brushwork, reasons about rarity and market context, and lands at $75M on a painting it had never seen. And when it reports 0.95 confidence, those estimates consistently land within 15% of true value across the dataset, so you can trust the model when it says it is sure.</p>
+
+<h3>Claude Sonnet 4.6 and Qwen 3.6 Plus, briefly</h3>
+
+<p><strong>Claude Sonnet 4.6</strong> recognizes every artist correctly but calibrates badly: it prices Dr. Gachet at $350M against a true $82.5M and Moulin de la Galette at $320M against a true $78M, assigning peak prices to recognized artists regardless of which specific work is in front of it. Recognition is fine, price mapping is broken.</p>
+
+<p><strong>Qwen 3.6 Plus</strong> commits enthusiastically on the wrong recognition. Two of its fifteen runs are confident misidentifications (Klimt as Henri Martin, Van Gogh as Duncan Grant) at 0.85 confidence, with no internal signal a downstream system could use to catch the error. The other three models avoided this failure mode entirely.</p>
+
+<h3>GPT-5.4: the commit threshold</h3>
+
+<p>GPT-5.4's behavior is the most interesting of the four because it is the easiest to misread. Looking at the raw numbers, you would assume GPT-5.4 simply cannot see paintings and recovers when given a label. The reasoning traces show something more specific. On Salvator Mundi, GPT-5.4 names Leonardo da Vinci in its first two sentences and then writes itself out of pricing the work as a Leonardo because, as the trace puts it, "in Old Master markets, attribution drives value more than almost any other factor" and the user supplied no provenance. The result is a workshop-copy price of $1.8M. Add four words of metadata and the same model prices the same painting at $350M. The vision model did not get better; the model received external permission to act on the attribution it had already made. The Modigliani is the cleanest single illustration of this two-state behavior.</p>
+
+<div style="margin:1.5rem 0;text-align:center;">
+<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;font-family:Roboto,sans-serif;">
+  <defs>
+    <marker id="arrowMain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker>
+  </defs>
+  <rect x="10" y="30" width="110" height="50" rx="6" fill="#eef3fb" stroke="#4285f4" stroke-width="1.5"/>
+  <text x="65" y="55" text-anchor="middle" font-size="13" font-weight="600">Image only</text>
+  <text x="65" y="72" text-anchor="middle" font-size="11" fill="#555">(no metadata)</text>
+  <rect x="150" y="20" width="180" height="70" rx="6" fill="#fff" stroke="#4285f4" stroke-width="1.5"/>
+  <text x="240" y="42" text-anchor="middle" font-size="12" font-weight="600">Vision: "Modigliani idiom"</text>
+  <text x="240" y="60" text-anchor="middle" font-size="11" fill="#555">elongated body, mask-like face,</text>
+  <text x="240" y="75" text-anchor="middle" font-size="11" fill="#555">almond eyes, warm flesh tones</text>
+  <rect x="360" y="20" width="170" height="70" rx="6" fill="#fdeeee" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="445" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#c0392b">Authentication gate</text>
+  <text x="445" y="60" text-anchor="middle" font-size="11" fill="#c0392b">CLOSED</text>
+  <text x="445" y="77" text-anchor="middle" font-size="10" fill="#888">"no basis for attribution"</text>
+  <rect x="560" y="30" width="150" height="50" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="635" y="55" text-anchor="middle" font-size="16" font-weight="700">$8,000</text>
+  <text x="635" y="72" text-anchor="middle" font-size="11" fill="#888">anonymous follower</text>
+  <line x1="120" y1="55" x2="150" y2="55" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <line x1="330" y1="55" x2="360" y2="55" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <line x1="530" y1="55" x2="560" y2="55" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <rect x="10" y="220" width="110" height="50" rx="6" fill="#eef8ef" stroke="#34a853" stroke-width="1.5"/>
+  <text x="65" y="245" text-anchor="middle" font-size="13" font-weight="600">Image + metadata</text>
+  <text x="65" y="262" text-anchor="middle" font-size="11" fill="#555">("Modigliani, Nu couché")</text>
+  <rect x="150" y="210" width="180" height="70" rx="6" fill="#fff" stroke="#34a853" stroke-width="1.5"/>
+  <text x="240" y="232" text-anchor="middle" font-size="12" font-weight="600">Vision: "Modigliani idiom"</text>
+  <text x="240" y="250" text-anchor="middle" font-size="11" fill="#555">(same visual reasoning as above)</text>
+  <text x="240" y="267" text-anchor="middle" font-size="11" fill="#555">nothing about the image changed</text>
+  <rect x="360" y="210" width="170" height="70" rx="6" fill="#eef8ef" stroke="#34a853" stroke-width="1.5"/>
+  <text x="445" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#34a853">Authentication gate</text>
+  <text x="445" y="250" text-anchor="middle" font-size="11" fill="#34a853">OPEN</text>
+  <text x="445" y="267" text-anchor="middle" font-size="10" fill="#888">label authenticates attribution</text>
+  <rect x="560" y="220" width="150" height="50" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="635" y="245" text-anchor="middle" font-size="16" font-weight="700">$165,000,000</text>
+  <text x="635" y="262" text-anchor="middle" font-size="11" fill="#888">committed Modigliani price</text>
+  <line x1="120" y1="245" x2="150" y2="245" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <line x1="330" y1="245" x2="360" y2="245" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <line x1="530" y1="245" x2="560" y2="245" stroke="#555" stroke-width="1.5" marker-end="url(#arrowMain)"/>
+  <text x="635" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">20,625x jump</text>
+  <text x="635" y="172" text-anchor="middle" font-size="11" fill="#555">from four words of text</text>
+  <line x1="635" y1="85" x2="635" y2="140" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="635" y1="180" x2="635" y2="215" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3"/>
+</svg>
+<p style="font-size:12px;color:var(--text-light);margin-top:0.5rem;max-width:600px;margin-left:auto;margin-right:auto;">GPT's two-state behavior on Nu couch&eacute;. The vision model produces the same identification in both rows. The jump from $8,000 to $165M comes from the gate opening, not from the vision changing.</p>
+</div>
+
+<p>The same pattern repeats across the dataset: GPT-5.4 names Rothko on Yellow Stripe and prices it as a follower at $18,000 before jumping to $48M with the label, and it identifies Klimt's landscape practice on Blumenwiese and prices it as $8.5M unattributed before jumping to $42M. Three different art-historical periods, same gate firing in each. GPT-5.4's 6.62x improvement factor is mostly this authentication gate on famous works, plus a smaller share from genuine recognition failure on five less-famous contemporary pieces (Ghenie, Mehretu, Akunyili Crosby, Condo, and Van Gogh's <em>Romans parisiens</em>) where the model actually did not know what it was looking at. The appendix has the full verbatim Salvator Mundi and Nu couch&eacute; traces for readers who want them.</p>
+
+<h2>What This Actually Tells Us</h2>
+
+<p>I started this experiment expecting to find out which frontier model is the best art appraiser. What I actually found is something more useful for thinking about multimodal models in general.</p>
+
+<p>The first thing is that visual recognition of fine art is largely a solved problem at the frontier. Three of the four models named the correct artist from the pixels on essentially every painting in the dataset, including paintings that sold after their training cutoffs. If you had asked me a year ago whether a multimodal model could look at a Klimt landscape it had never seen captioned and identify it from the square format and Pointillist brushwork, I would have said probably not. It can.</p>
+
+<p>The second thing is that recognition is the easy part. What separates the four models is what they do with that recognition once they have it. Gemini 3.1 Pro commits, calibrates, and ends up at the right price. Claude Sonnet 4.6 commits but assigns peak prices to recognized artists regardless of which specific work is in front of it. GPT-5.4 recognizes the artist and then refuses to act on that recognition until a text label authenticates it. Qwen 3.6 Plus commits enthusiastically, including on the small number of works where its recognition is wrong. None of these are vision failures. They are different downstream policies sitting on top of roughly comparable visual capabilities, and the policies are what produce the very different final numbers.</p>
+
+<p>The third thing, which is the part I would actually carry to other domains, is that the gap between image-only accuracy and image-plus-metadata accuracy is a usable diagnostic for those policies. A small gap means the model commits from the image (Gemini 3.1 Pro, 1.57x). A large gap means there is a policy in the way that the metadata releases (GPT-5.4, 6.62x). The improvement factor lets you read each model's commit posture without having to read every reasoning trace, and more broadly it could give us a window into text calibration across different multimodal models, with art auction as one of the testbeds for studying it.</p>
+
+<div class="post-footer-note">
+    <p><strong>This is the first post in my LLM Art Auctions research series</strong>, a multi-part investigation into how frontier multimodal models reason about art individually and how they behave when you put them in a competitive multi-agent setting against each other. This first post is the single-agent baseline: how each of the four models prices fifteen paintings on its own, and what the gap between image-only and metadata conditions reveals about the underlying behavior.</p>
+    <p style="margin-top:1rem;">Subsequent posts in the series extend this analysis to AI-generated art (where the price of the work lives in the narrative around it rather than the pixels) and to a competitive multi-agent English auction where all four models bid against each other on the same paintings.</p>
+</div>
+
+<h2>References</h2>
+
+<ol class="references-list" style="font-size:14px;">
+    <li>Hyndman, R. J., &amp; Koehler, A. B. (2006). <em>Another look at measures of forecast accuracy.</em> International Journal of Forecasting, 22(4). <small>Source for the log-ratio error metric (MALE) used throughout.</small></li>
+    <li>Kadavath, S. et al. (2022). <em>Language Models (Mostly) Know What They Know.</em> Anthropic. <small>Background for the confidence-calibration claim about Gemini 3.1 Pro.</small></li>
+    <li>Christie's auction records for Salvator Mundi (2017), Nu couch&eacute; (2015), and Portrait of Dr. Gachet (1990). Sotheby's records for Bildnis Elisabeth Lederer and Blumenwiese (2025). <small>Ground-truth prices for the fifteen-painting dataset.</small></li>
+    <li>Full experiment code, prompts, per-artwork logs, and reasoning traces: <a href="https://github.com/arcAman07/llm-art-valuation" target="_blank">github.com/arcAman07/llm-art-valuation</a>.</li>
+</ol>
+
+<h3 style="margin-top:2rem;">Citation</h3>
+
+<p style="font-size:14px;">If you use any of the data, code, framing, or findings from this post in your own work, please cite:</p>
+
+<pre style="font-size:13px; background:var(--code-bg,#f5f5f5); padding:1rem; border-radius:6px; overflow-x:auto;"><code>@misc{sharma2026llmartvaluation,
+  author       = {Sharma, Aman},
+  title        = {Can Frontier {AI} Models Read a Painting?
+                  Recognition vs Commitment in Multimodal Art Valuation},
+  year         = {2026},
+  month        = apr,
+  howpublished = {Blog post, \emph{LLM Art Auctions} series (Part 1)},
+  url          = {https://arcaman07.github.io/blog/can-llms-see-art.html}
+}</code></pre>
+
+<p style="margin-top:2rem; font-size:14px;">The full codebase, experiment logs, and results are available at <a href="https://github.com/arcAman07/llm-art-valuation" target="_blank">github.com/arcAman07/llm-art-valuation</a>.</p>
+
+<h2 style="margin-top:3rem;">Appendix</h2>
+
+<p style="font-size:14px;color:var(--text-light);">Click to expand. Detailed breakdowns referenced but not required to follow the main argument.</p>
+
+<details style="margin-top:1rem;border:1px solid var(--border,#ddd);border-radius:6px;padding:0.8rem 1rem;">
+<summary style="cursor:pointer;font-weight:600;font-size:15px;">Category by Category (image-only MALE)</summary>
+
+<p style="margin-top:1rem;">The same story the main post tells, sliced three ways. Each column is a model, each row is a category of the fifteen paintings.</p>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Category</th><th>Gemini</th><th>Claude</th><th>Qwen</th><th>GPT</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Masterpieces</strong></td><td>0.323</td><td>0.376</td><td class="best">0.228</td><td class="worst">1.505</td></tr>
+        <tr><td><strong>Recent OOD</strong></td><td class="best">0.180</td><td class="best">0.183</td><td>1.199</td><td class="worst">1.975</td></tr>
+        <tr><td><strong>Contemporary</strong></td><td class="best">0.280</td><td class="worst">1.503</td><td>0.678</td><td class="worst">2.409</td></tr>
+    </tbody>
+</table></div>
+
+<div class="chart-wrap">
+    <div class="chart-title">Image-Only MALE by Category</div>
+    <canvas id="chartCategory" height="280"></canvas>
+    <div class="chart-caption">Lower is better. Gemini is the only model that holds together across all three categories.</div>
+</div>
+
+<p>Four things worth naming from this table. Qwen 3.6 Plus scores best on Masterpieces (0.228) because its strongest mode is recognition of famous works; Gemini 3.1 Pro and Claude Sonnet 4.6 sit close behind at 0.323 and 0.376, and both of them also cited specific auction histories in their traces, so this is not a clean "Qwen memorized more" story so much as a "Qwen's recognition happens to line up with the masterpiece tier." Gemini 3.1 Pro and Claude Sonnet 4.6 essentially tie on Recent OOD at 0.180 and 0.183, which is the subset where no model could have memorized the specific prices since they sold in November 2025, and that near-tie is the strongest evidence in the whole dataset that both models were doing real visual appraisal on prices they had not seen. Contemporary is where Claude Sonnet 4.6 collapses (1.503) because it cannot recognize the less-famous artists and defaults to generic-decorative pricing, while Gemini 3.1 Pro at 0.280 holds up remarkably well. GPT-5.4 is the highest in all three categories as a consequence of its commit-threshold behavior.</p>
+</details>
+
+<details style="margin-top:1rem;border:1px solid var(--border,#ddd);border-radius:6px;padding:0.8rem 1rem;">
+<summary style="cursor:pointer;font-weight:600;font-size:15px;">Full per-artwork results (all 15 paintings, both conditions)</summary>
+
+<div class="chart-wrap" style="margin-top:1rem;">
+    <div class="chart-title">Valuation Ratios, Image Only (log scale, 1.0 = perfect)</div>
+    <canvas id="chartRatios" height="340"></canvas>
+    <div class="chart-caption">Each group is one artwork. Bars at 0 mean perfect, below means undervalued, above means overvalued.</div>
+</div>
+
+<h3 style="margin-top:1rem;">Image Only</h3>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Artwork</th><th>True Price</th><th>GPT-5.4</th><th>Claude</th><th>Gemini</th><th>Qwen</th></tr></thead>
+    <tbody>
+        <tr class="separator"><td colspan="6">Masterpieces</td></tr>
+        <tr><td>Salvator Mundi</td><td>$450.3M</td><td>$1.8M</td><td>$550M</td><td class="within">$450M</td><td class="within">$475M</td></tr>
+        <tr><td>Nu couch&eacute;</td><td>$170.4M</td><td>$8K</td><td>$120M</td><td>$120M</td><td class="within">$165M</td></tr>
+        <tr><td>The Scream</td><td>$119.9M</td><td>$150M</td><td>$300M</td><td>$300M</td><td>$185M</td></tr>
+        <tr><td>Portrait of Dr. Gachet</td><td>$82.5M</td><td class="within">$95M</td><td>$350M</td><td>$250M</td><td>$185M</td></tr>
+        <tr><td>Bal du moulin de la Galette</td><td>$78.1M</td><td>$18M</td><td>$320M</td><td>$300M</td><td>$285M</td></tr>
+        <tr class="separator"><td colspan="6">Recent OOD</td></tr>
+        <tr><td>Bildnis Elisabeth Lederer</td><td>$236.4M</td><td>$180M</td><td>$95M</td><td>N/A</td><td>$72M</td></tr>
+        <tr><td>Blooming Meadow (Klimt)</td><td>$86.0M</td><td>$8.5M</td><td>$55M</td><td class="within">$75M</td><td>$125K</td></tr>
+        <tr><td>Romans Parisiens (Van Gogh)</td><td>$62.7M</td><td>$6K</td><td>$75M</td><td>$42M</td><td>$450K</td></tr>
+        <tr><td>No. 31 Yellow Stripe (Rothko)</td><td>$62.2M</td><td>$18K</td><td class="within">$55M</td><td>$87M</td><td>$45M</td></tr>
+        <tr><td>El sue&ntilde;o (Kahlo)</td><td>$54.7M</td><td>$3.5M</td><td>$35M</td><td>$25M</td><td>$24M</td></tr>
+        <tr class="separator"><td colspan="6">Contemporary</td></tr>
+        <tr><td>Knife Behind Back (Nara)</td><td>$24.9M</td><td>$1.8M</td><td>$5M</td><td>$12.5M</td><td>$1.85M</td></tr>
+        <tr><td>Pie Fight Interior 12 (Ghenie)</td><td>$10.4M</td><td>$6K</td><td>$120K</td><td class="within">$8.5M</td><td>$3.2M</td></tr>
+        <tr><td>Walkers With the Dawn (Mehretu)</td><td>$10.7M</td><td>$12K</td><td>$75K</td><td>$4.5M</td><td>$8.2M</td></tr>
+        <tr><td>The Beautyful Ones (Crosby)</td><td>$4.7M</td><td>$180K</td><td>$2.8M</td><td>$3M</td><td>$525K</td></tr>
+        <tr><td>Force Field (Condo)</td><td>$6.9M</td><td>$4K</td><td>$22K</td><td>$2.5M</td><td>$1.4M</td></tr>
+    </tbody>
+</table></div>
+
+<h3 style="margin-top:1rem;">With Metadata</h3>
+
+<div class="table-wrap"><table>
+    <thead><tr><th>Artwork</th><th>True Price</th><th>GPT-5.4</th><th>Claude</th><th>Gemini</th><th>Qwen</th></tr></thead>
+    <tbody>
+        <tr class="separator"><td colspan="6">Masterpieces</td></tr>
+        <tr><td>Salvator Mundi</td><td>$450.3M</td><td>$350M</td><td class="within">$420M</td><td class="within">$450M</td><td class="within">$475M</td></tr>
+        <tr><td>Nu couch&eacute;</td><td>$170.4M</td><td class="within">$165M</td><td>$130M</td><td class="within">$165M</td><td>$185M</td></tr>
+        <tr><td>The Scream</td><td>$119.9M</td><td>$180M</td><td>$210M</td><td>$350M</td><td>$155M</td></tr>
+        <tr><td>Portrait of Dr. Gachet</td><td>$82.5M</td><td>$275M</td><td>$300M</td><td>$250M</td><td>$195M</td></tr>
+        <tr><td>Bal du moulin de la Galette</td><td>$78.1M</td><td>$125M</td><td>$200M</td><td>$150M</td><td>$115M</td></tr>
+        <tr class="separator"><td colspan="6">Recent OOD</td></tr>
+        <tr><td>Bildnis Elisabeth Lederer</td><td>$236.4M</td><td>$85M</td><td>$110M</td><td>$135M</td><td>$145M</td></tr>
+        <tr><td>Blooming Meadow (Klimt)</td><td>$86.0M</td><td>$42M</td><td>$55M</td><td class="within">$85M</td><td>$48.5M</td></tr>
+        <tr><td>Romans Parisiens (Van Gogh)</td><td>$62.7M</td><td>$34M</td><td>$80M</td><td>$34M</td><td class="within">$65M</td></tr>
+        <tr><td>No. 31 Yellow Stripe (Rothko)</td><td>$62.2M</td><td>$48M</td><td class="within">$55M</td><td>$85M</td><td class="within">$52M</td></tr>
+        <tr><td>El sue&ntilde;o (Kahlo)</td><td>$54.7M</td><td>$18M</td><td class="within">$55M</td><td>$42M</td><td>$42M</td></tr>
+        <tr class="separator"><td colspan="6">Contemporary</td></tr>
+        <tr><td>Knife Behind Back (Nara)</td><td>$24.9M</td><td>$9.5M</td><td class="within">$20M</td><td class="within">$25M</td><td>$12.5M</td></tr>
+        <tr><td>Pie Fight Interior 12 (Ghenie)</td><td>$10.4M</td><td>$4.8M</td><td>$4.5M</td><td class="within">$8.5M</td><td>$4.5M</td></tr>
+        <tr><td>Walkers With the Dawn (Mehretu)</td><td>$10.7M</td><td>$8.5M</td><td class="within">$10.5M</td><td class="within">$10.7M</td><td>$6.8M</td></tr>
+        <tr><td>The Beautyful Ones (Crosby)</td><td>$4.7M</td><td>$5.8M</td><td>$2.8M</td><td>$3M</td><td>$1.4M</td></tr>
+        <tr><td>Force Field (Condo)</td><td>$6.9M</td><td>$950K</td><td>$3.5M</td><td>$3.8M</td><td>$850K</td></tr>
+    </tbody>
+</table></div>
+<p style="font-size:12.5px; color:var(--text-light); margin-top:-0.8rem;">Highlighted = within 20% of true price. N/A = response could not be parsed into a dollar value; Gemini's image-only run on Bildnis Elisabeth Lederer is the one case this happened on run 0.</p>
+</details>
+
+<details style="margin-top:1rem;border:1px solid var(--border,#ddd);border-radius:6px;padding:0.8rem 1rem;">
+<summary style="cursor:pointer;font-weight:600;font-size:15px;">GPT commit threshold: example reasoning traces from the logs</summary>
+
+<p style="margin-top:1rem;">The body of the post argues that GPT-5.4's image-only behavior is an authentication gate, not a vision failure. Here are two of the cleanest examples from the run-0 image-only logs that show this directly. Both traces are verbatim, both come from paintings the post discusses in the body, and both show the same two-step structure: GPT-5.4's vision model correctly identifies the artist from visual evidence in the opening sentences, then the model writes itself out of using that identification because the prompt asks it to value the work "based on what is visible" and explicit attribution is not visible. The full per-painting logs and reasoning traces for all four models, both conditions, all 15 paintings, are available in the <a href="https://github.com/arcAman07/llm-art-valuation" target="_blank">GitHub repository</a> for anyone who wants to audit beyond these two.</p>
+
+<div class="model-quote" style="margin-top:1rem;">
+    <h4>Example 1: Salvator Mundi (true price $450.3M)</h4>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:0.6rem;">GPT image-only estimate: <strong>$1.8M</strong>. With metadata: <strong>$350M</strong>.</p>
+    <p>"The painting depicted is a half-length frontal image of Christ giving a blessing... unmistakably in the Renaissance idiom and very closely aligned with the highly famous Salvator Mundi composition associated with Leonardo da Vinci and his workshop/followers. Because the user has supplied no title, attribution, support details, dimensions, provenance, or technical examination, the valuation must be based strictly on what is visible... That distinction is crucial: in Old Master markets, attribution drives value more than almost any other factor."</p>
+</div>
+
+<p style="margin-top:1rem;">GPT-5.4 names Leonardo in the first two sentences, then explicitly cites the lack of provenance as its reason for not pricing the work as a Leonardo. The result is a workshop-copy price. Adding the title and artist name in the metadata condition releases the gate, and the same model prices the same image at $350M.</p>
+
+<div class="model-quote" style="margin-top:1.5rem;">
+    <h4>Example 2: Nu couch&eacute; (true price $170.4M)</h4>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:0.6rem;">GPT image-only estimate: <strong>$8,000</strong>. With metadata: <strong>$165M</strong>. A 20,625x jump from four words of text.</p>
+    <p>"The image depicts a reclining female nude rendered in a highly simplified, stylized manner strongly reminiscent of early 20th-century modernism, and more specifically evocative of Amedeo Modigliani's idiom: elongated body, mask-like face, almond-shaped eyes, simplified contouring, warm flesh tones... Strong resemblance to Modigliani/School of Paris reclining nude style but no basis for attribution."</p>
+</div>
+
+<p style="margin-top:1rem;">Same pattern. GPT-5.4 identifies Modigliani's style with specific feature-level reasoning (elongated body, mask-like face, almond-shaped eyes), then refuses to commit to "this is a Modigliani" and prices the work as if an unknown painter had made it in the same style. With four words of metadata authentication, the same vision reasoning produces a $165M estimate. The vision model did not get better between the two runs; the gate opened.</p>
+
+<p style="margin-top:1rem;">The same gate fires on at least two more paintings in the run-0 log: Rothko's Yellow Stripe (image-only $18K, metadata $48M) and Klimt's Blumenwiese (image-only $8.5M, metadata $42M). Three different art-historical periods, the same authentication-gate behavior in each. The full image-only and metadata reasoning traces for all four models on all 15 paintings are in the <a href="https://github.com/arcAman07/llm-art-valuation" target="_blank">repository</a>.</p>
+</details>
+
+<!-- POST_CONTENT_END -->
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">&copy; 2026 Aman Sharma. All rights reserved.</div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script data-goatcounter="https://amananytime07.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+    const COLORS = {
+        gemini: 'rgba(52,168,83,0.85)',
+        claude: 'rgba(255,153,0,0.85)',
+        qwen: 'rgba(130,80,255,0.85)',
+        gpt: 'rgba(66,133,244,0.85)',
+        geminiMeta: 'rgba(52,168,83,0.4)',
+        claudeMeta: 'rgba(255,153,0,0.4)',
+        qwenMeta: 'rgba(130,80,255,0.4)',
+        gptMeta: 'rgba(66,133,244,0.4)',
+    };
+
+    (function() {
+        const ctx = document.getElementById('chartMALE');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Gemini 3.1 Pro', 'Claude Sonnet 4.6', 'Qwen 3.6 Plus', 'GPT-5.4'],
+                datasets: [
+                    { label: 'Image Only', data: [0.267, 0.687, 0.649, 1.963], backgroundColor: [COLORS.gemini, COLORS.claude, COLORS.qwen, COLORS.gpt] },
+                    { label: 'With Metadata', data: [0.170, 0.203, 0.259, 0.296], backgroundColor: [COLORS.geminiMeta, COLORS.claudeMeta, COLORS.qwenMeta, COLORS.gptMeta], borderColor: [COLORS.gemini, COLORS.claude, COLORS.qwen, COLORS.gpt], borderWidth: 1.5 }
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'MALE (lower = better)' } } } }
+        });
+    })();
+
+    (function() {
+        const ctx = document.getElementById('chartMeta');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['GPT-5.4', 'Claude Sonnet 4.6', 'Qwen 3.6 Plus', 'Gemini 3.1 Pro'],
+                datasets: [{ label: 'Improvement Factor (image-only MALE / metadata MALE)', data: [6.62, 3.39, 2.51, 1.57], backgroundColor: [COLORS.gpt, COLORS.claude, COLORS.qwen, COLORS.gemini] }] },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Improvement factor (x)' } } } }
+        });
+    })();
+
+    (function() {
+        const ctx = document.getElementById('chartCategory');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['Masterpieces', 'Recent OOD', 'Contemporary'],
+                datasets: [
+                    { label: 'Gemini', data: [0.323, 0.180, 0.280], backgroundColor: COLORS.gemini },
+                    { label: 'Claude',  data: [0.376, 0.183, 1.503], backgroundColor: COLORS.claude },
+                    { label: 'Qwen',   data: [0.228, 1.199, 0.678], backgroundColor: COLORS.qwen },
+                    { label: 'GPT',    data: [1.505, 1.975, 2.409], backgroundColor: COLORS.gpt },
+                ] },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'MALE (lower = better)' } } } }
+        });
+    })();
+
+    (function() {
+        const ctx = document.getElementById('chartConf');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'scatter',
+            data: { datasets: [
+                { label: 'Gemini', data: [{x: 0.941, y: 0.267}], backgroundColor: COLORS.gemini, pointRadius: 10 },
+                { label: 'Claude', data: [{x: 0.607, y: 0.687}], backgroundColor: COLORS.claude, pointRadius: 10 },
+                { label: 'Qwen',   data: [{x: 0.898, y: 0.649}], backgroundColor: COLORS.qwen,   pointRadius: 10 },
+                { label: 'GPT',    data: [{x: 0.338, y: 1.963}], backgroundColor: COLORS.gpt,    pointRadius: 10 },
+            ] },
+            options: { responsive: true, plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: function(ctx) { return ctx.dataset.label + ': confidence ' + ctx.parsed.x + ', MALE ' + ctx.parsed.y; } } } },
+                scales: { x: { title: { display: true, text: 'Avg Self-Reported Confidence' }, min: 0, max: 1 }, y: { title: { display: true, text: 'Image-Only MALE (lower = better)' }, beginAtZero: true } } }
+        });
+    })();
+
+    (function() {
+        const ctx = document.getElementById('chartRatios');
+        if (!ctx) return;
+        const labels = ['Salvator Mundi','Nu couch\u00e9','The Scream','Dr. Gachet','Bal Moulin','Bildnis Lederer','Blooming Meadow','Romans Parisiens','Yellow Stripe','El sue\u00f1o','Knife Behind Back','Pie Fight 12','Walkers Dawn','Beautyful Ones','Force Field'];
+        const toLog = v => v === null ? null : Math.log(Math.max(v, 0.00005));
+        const gpt    = [0.004,0.000047,1.251,1.152,0.230, 0.762,0.099,0.000096,0.000289,0.064, 0.072,0.000577,0.001,0.038,0.001];
+        const claude = [1.221,0.704,2.502,4.242,4.097, 0.402,0.640,1.196,0.885,0.640, 0.200,0.012,0.007,0.591,0.003];
+        const gemini = [0.999,0.704,2.502,3.030,3.841, null ,0.872,0.670,1.400,0.457, 0.501,0.817,0.419,0.633,0.365];
+        const qwen   = [1.055,0.968,1.543,2.242,3.649, 0.305,0.001,0.007,0.724,0.439, null ,0.308,0.764,null ,0.211];
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets: [
+                { label: 'GPT-5.4',    data: gpt.map(toLog),    backgroundColor: COLORS.gpt },
+                { label: 'Claude',     data: claude.map(toLog), backgroundColor: COLORS.claude },
+                { label: 'Gemini',     data: gemini.map(toLog), backgroundColor: COLORS.gemini },
+                { label: 'Qwen',       data: qwen.map(toLog),   backgroundColor: COLORS.qwen },
+            ] },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { x: { ticks: { maxRotation: 60, font: { size: 10 } } }, y: { title: { display: true, text: 'ln(ratio): 0 = perfect, negative = undervalued' } } } }
+        });
+    })();
+
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://arcaman07.com/sitemap.xml
+Sitemap: https://arcaman07.github.io/sitemap.xml
