@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Search of a Verifier | Aman Sharma</title>
+    <meta name="description" content="Frontier models make real discoveries in math and code and almost none in robotics, biology, or open-ended science. The dividing line is how cheap, exact, and automatic the ground truth is. Where a verifier exists, RL scales inside LLMs and discoveries follow. For the physical world, inverse RL recovers the missing reward from demonstrations.">
+    <link rel="canonical" href="https://arcaman07.github.io/blog/verifier-bottleneck.html">
+    <meta property="og:title" content="In Search of a Verifier">
+    <meta property="og:description" content="Why AI discovers in math and code but stalls in the physical world. It comes down to whether the domain has a cheap, exact, automatic verifier, and how inverse RL recovers one from demonstrations.">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://arcaman07.github.io/assets/img/profile.jpg">
+    <meta property="og:url" content="https://arcaman07.github.io/blog/verifier-bottleneck.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@arcaman07">
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/blog-post.css">
+    <style>
+        .post-lede {
+            font-size: 17px;
+            line-height: 1.75;
+            color: var(--text);
+            font-weight: 400;
+            font-style: normal !important;
+            border-left: 3px solid var(--theme);
+            padding-left: 1.1rem;
+            margin: 1.8rem 0 2rem;
+        }
+        .verify { background: rgba(220,50,50,0.10); color: #b02020; padding: 1px 6px; border-radius: 3px; font-size: 12.5px; font-weight: 500; }
+        html[data-theme="dark"] .verify { color: #ff7070; }
+        .pullquote {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            font-weight: 400;
+            border-left: 3px solid var(--theme);
+            padding: 0.4rem 0 0.4rem 1.2rem;
+            margin: 2rem 0;
+            color: var(--text);
+        }
+        .post-fig { margin: 2.4rem 0; }
+        .post-fig svg { display: block; width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div id="progress"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">Aman Sharma</a>
+            <div style="display:flex;align-items:center;gap:0;">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">About</a></li>
+                    <li><a href="../blog.html" class="active">Blog</a></li>
+                    <li><a href="../publications.html">Research</a></li>
+                    <li><a href="../projects.html">Projects</a></li>
+                </ul>
+                <div class="nav-right">
+                    <button id="light-toggle" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+                    <button class="nav-toggle" id="menuToggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="post-body">
+
+            <a href="../blog.html" class="back-link">
+                <i class="fa-solid fa-arrow-left" style="font-size:11px;"></i> Back to Blog
+            </a>
+
+            <div class="post-hero">
+                <div class="post-hero-meta">
+                    <span><i class="fa-solid fa-calendar" style="font-size:10px;"></i> May 2026</span>
+                    <span class="sep">&middot;</span>
+                    <span><i class="fa-solid fa-clock" style="font-size:10px;"></i> 16 min read</span>
+                    <span class="sep">&middot;</span>
+                    <span><i class="fa-solid fa-file-lines" style="font-size:10px;"></i> Essay</span>
+                </div>
+                <h1>In Search of a Verifier</h1>
+                <p class="post-subtitle">Frontier models have made real discoveries in math and code and almost none in robotics, biology, or open-ended science, and the usual explanation is that the second set of problems is simply harder. I think the dividing line is narrower than difficulty. It comes down to how cheap, how exact, and how automatic the ground truth is in each domain, because a domain that hands you a correct reward function for free lets reinforcement learning scale inside LLMs until discoveries follow, while a domain that hands you nothing leaves the same models stuck. The physical world sits at the wrong end of that axis, and the way back is to recover the reward from the demonstrations you do have, which is exactly what inverse RL does.</p>
+                <div class="post-tags-hero">
+                    <a href="#">reward-functions</a>
+                    <a href="#">verifiers</a>
+                    <a href="#">agentic-ai</a>
+                    <a href="#">inverse-rl</a>
+                    <a href="#">robotics</a>
+                </div>
+            </div>
+
+            <div class="post-content">
+<p>
+Look at what frontier models have actually discovered in the last two years, and a strange asymmetry shows up. In mathematics and programming, and in the slices of science that behave like them, they have produced genuine, checkable results. Olympiad problems solved, new algorithms found, protein structures predicted, stable materials proposed, open conjectures chipped away at. In robotics, in most of biology, in open-ended science, the same models over the same two years have produced almost nothing comparable. The tempting explanation is that the second set of problems is simply harder. I think the real reason is narrower, and more useful. The dividing line is not the field. It is whether the domain gives you a way to tell right from wrong cheaply, exactly, and without a human in the loop, and most domains give you no such thing.
+</p>
+
+<h2>A verifier is a reward function you didn't have to build</h2>
+
+<p>
+We have already seen what these verifiers look like in practice. In math, Lean is the one doing the work, a proof assistant that mechanically checks whether every step of an argument actually follows, and AlphaProof wrote its solutions in it for exactly that reason. In coding the verifier is even more familiar. It is the compiler or interpreter you already use. Python runs the candidate program and the test suite either passes or throws, a Rust program compiles and clears its checks or it does not, and either way the machine tells you, not a person. In each case a function takes a candidate answer and returns right or wrong, and the same three properties hold every time.
+</p>
+
+<ul>
+<li><strong>Exact.</strong> When it says right, the answer is really right. It is a true measure of success, not a proxy that can be gamed. A Lean proof that type-checks is correct, full stop. Note that exact is about whether the judgement is <em>trustworthy</em>, not about who or what makes it. A careful human referee can be exact too. What matters is that the verdict tracks the truth.</li>
+<li><strong>Automatic.</strong> No human has to be in the loop for the check to run. This is the property that separates a compiler, which decides on its own, from a peer reviewer, whose judgement may be just as exact but whose time does not scale.</li>
+<li><strong>Cheap.</strong> You can run it a million times without a second thought, so it can sit inside a training loop and fire on every attempt. A check that is exact and automatic but takes a week and a lab is not cheap.</li>
+</ul>
+
+<p>
+Those three, exact and automatic and cheap, are what make a verifier a verifier, and they matter far more than the name. They also come apart from each other, which is the whole point. A domain can have a perfectly trustworthy notion of correctness and still lack any way to apply it without a human, or without a month of lab time, and that is exactly the situation the physical world is in. Hold onto the three, because the rest of this essay is an argument about which domains have all of them, which have some, and which have none.
+</p>
+
+<p>
+That combination is exactly what reinforcement learning needs and almost never gets, a reward signal dense enough to learn from and honest enough to trust. When a verifier is cheap, exact, and automatic, you can put it inside the training loop. Have the model generate many attempts at a problem, let the verifier score each one, keep the trajectories that pass, and train the model on its own successes. That is the shape of the methods carrying the field right now, on-policy RL with GRPO, on-policy distillation, self-distillation, all variations on the same move. The model proposes, the verifier decides what counts, and the model is pushed toward whatever survived. Nobody grades anything by hand.
+</p>
+
+<p>
+But those three properties do not always travel together, and once you stop treating "has a verifier" as a yes-or-no question and start asking how cheap, how exact, and how automatic the check really is, the map of AI's hits and misses becomes easy to read. Scored on those three axes, the domains sort themselves cleanly.
+</p>
+
+<ul>
+<li><strong>All three.</strong> Math and code sit here. A proof type-checks, a program passes its tests, and the verdict is trustworthy, needs no human, and costs almost nothing to run. These are the domains where discovery has been fastest, and it is not a coincidence.</li>
+<li><strong>Exact and automatic, but not cheap.</strong> A machine can deliver a trustworthy verdict on its own, but each verdict is slow and expensive. Materials science lives here. A density-functional-theory calculation is an honest, automatic check on a candidate crystal, yet it is far too costly to run a million times the way you can run a compiler.</li>
+<li><strong>Exact in principle, but not automatic.</strong> A correct answer genuinely exists, and an expert can confirm it once every step is checked, but no machine hands you that verdict for free. This is most of open-ended science. A new proof, a new physical result, a new mechanism can be exactly right, yet establishing it still runs through human judgement, sometimes months of it. The correctness is real, but the automatic, cheap check is missing.</li>
+<li><strong>No trustworthy check for a new answer at all, sometimes with an archive to lean on.</strong> Here even the exactness is out of reach for a fresh case. AlphaFold is the softer version, with no verifier for a brand-new prediction but an unusually complete record of old ones to train against. Robotics is the hard version, where "drove like a careful human" has no crisp notion of correct to begin with, and there is no archive that supplies one. This bottom tier is where discovery has stalled.</li>
+</ul>
+
+<p>
+The whole essay is really one claim. Where a domain lands on that scale, not how hard its problems are, is what decides whether frontier models make discoveries in it. The figure below scores each domain on the three properties, and the gradient is the thesis in one picture.
+</p>
+
+<div class="post-fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 392" width="100%" role="img" aria-label="Domains placed on a verifier axis by how many of the three properties (exact, automatic, cheap) their ground-truth check has. Math and code have all three and discovery is fast. Materials has exact and automatic but not cheap. Open-ended science has only exactness. Robotics and biology have none, and discovery stalls." preserveAspectRatio="xMidYMid meet" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <style>
+    svg { --fig-text: var(--text, #1a1a1a); }
+    @media (prefers-color-scheme: dark) { svg { --fig-text: var(--text, #e8e8ea); } }
+    .ttl { fill: var(--fig-text); font-weight: 500; }
+    .mut { fill: var(--fig-text); opacity: .58; }
+    .nm  { fill: var(--fig-text); font-weight: 600; }
+    .cn  { stroke: var(--fig-text); stroke-opacity: .28; stroke-width: 1.2; }
+  </style>
+  <defs>
+    <linearGradient id="axg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9aa2ad"/><stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+    <g id="s-full"><circle r="5" fill="#0d9488"/></g>
+    <g id="s-none"><circle r="5" fill="none" stroke="var(--fig-text)" stroke-opacity=".34" stroke-width="1.3"/></g>
+  </defs>
+  <text class="ttl" x="24" y="30" font-size="16.5">Where each domain sits on the verifier axis</text>
+  <text class="mut" x="24" y="52" font-size="12">position is how many of the three the check has: exact, automatic, cheap</text>
+  <rect x="90" y="212" width="560" height="9" rx="4.5" fill="url(#axg)"/>
+  <text class="mut" x="90" y="240" font-size="11.5">no verifier</text>
+  <text x="650" y="240" font-size="11.5" text-anchor="end" fill="#0d9488" font-weight="600">full verifier</text>
+  <line class="cn" x1="115" y1="182" x2="115" y2="212"/>
+  <text class="nm" x="115" y="130" font-size="13" text-anchor="middle">Robotics, biology</text>
+  <use href="#s-none" x="97" y="153"/><use href="#s-none" x="115" y="153"/><use href="#s-none" x="133" y="153"/>
+  <text class="mut" x="115" y="176" font-size="11.5" text-anchor="middle">stalled</text>
+  <circle cx="115" cy="216.5" r="5.5" fill="#9aa2ad"/>
+  <circle cx="290" cy="216.5" r="5.5" fill="#9aa2ad"/>
+  <line class="cn" x1="290" y1="221" x2="290" y2="238"/>
+  <text class="nm" x="290" y="258" font-size="13" text-anchor="middle">Open-ended science</text>
+  <use href="#s-full" x="272" y="278"/><use href="#s-none" x="290" y="278"/><use href="#s-none" x="308" y="278"/>
+  <text class="mut" x="290" y="300" font-size="11.5" text-anchor="middle">stalled</text>
+  <line class="cn" x1="463" y1="182" x2="463" y2="212"/>
+  <text class="nm" x="463" y="130" font-size="13" text-anchor="middle">Materials</text>
+  <use href="#s-full" x="445" y="153"/><use href="#s-full" x="463" y="153"/><use href="#s-none" x="481" y="153"/>
+  <text x="463" y="176" font-size="11.5" text-anchor="middle" fill="#d99a2b" font-weight="600">emerging</text>
+  <circle cx="463" cy="216.5" r="5.5" fill="#d99a2b"/>
+  <line class="cn" x1="635" y1="182" x2="635" y2="212"/>
+  <text class="nm" x="635" y="130" font-size="13" text-anchor="middle">Math and code</text>
+  <use href="#s-full" x="617" y="153"/><use href="#s-full" x="635" y="153"/><use href="#s-full" x="653" y="153"/>
+  <text x="635" y="176" font-size="11.5" text-anchor="middle" fill="#0d9488" font-weight="600">fast</text>
+  <circle cx="635" cy="216.5" r="5.5" fill="#0d9488"/>
+  <text class="mut" x="24" y="334" font-size="12.5">Discovery tracks how many of the three a domain has. Math and code have all three, materials two,</text>
+  <text class="mut" x="24" y="352" font-size="12.5">open-ended science only exactness, and robotics none. The check runs out before the physical world.</text>
+  <g transform="translate(24,380)">
+    <use href="#s-full" x="6" y="0"/><text class="mut" x="17" y="4" font-size="11.5">present</text>
+    <g transform="translate(96,0)"><use href="#s-none" x="6" y="0"/><text class="mut" x="17" y="4" font-size="11.5">missing</text></g>
+    <text class="mut" x="200" y="4" font-size="11.5">each triple = exact &#183; automatic &#183; cheap</text>
+  </g>
+</svg>
+</div>
+
+<p class="pullquote">
+Every domain where frontier models have made real discoveries is one where the ground truth was cheap, exact, and automatic, or close enough to fake it. The model did not invent the reward signal. It was handed one, or something that stood in for one.
+</p>
+
+<h2>The discoveries, and the verifier hiding in each</h2>
+
+<p>
+Look at the headline results of the last few years and the ground truth is never hidden very deep.
+</p>
+
+<ul>
+<li><strong>AlphaProof and AlphaGeometry 2</strong> (DeepMind, 2024) reached a silver-medal score at the International Mathematical Olympiad. AlphaProof wrote its solutions in <strong>Lean</strong>, so every candidate proof was machine-checked against a perfectly correct reward, and AlphaGeometry 2 clears the same bar with its own symbolic engine. Either way the reward was exact and automatic.</li>
+<li><strong>FunSearch</strong> (DeepMind, Nature 2023) discovered new constructions for the cap-set problem and improved online bin-packing heuristics. It pairs an LLM with an automatic evaluator that scores each candidate program. The evaluator is the verifier.</li>
+<li><strong>AlphaTensor</strong> (Nature 2022) found faster matrix-multiplication algorithms, and <strong>AlphaDev</strong> (Nature 2023) found faster sorting routines. In both, correctness is mechanically checkable, so the search had an exact reward.</li>
+<li><strong>Reasoning models trained with verifiable rewards</strong>, the o-series, DeepSeek-R1, and the broader "RLVR" wave of 2025, get most of their gains on math and code precisely because those are the domains where an answer can be auto-graded.</li>
+</ul>
+
+<p>
+Now the interesting cases, the ones that sit partway along the axis rather than at the clean end.
+</p>
+
+<ul>
+<li><strong>GNoME</strong> (DeepMind's materials search, 2023) could score each candidate crystal with a density-functional-theory energy calculation, an automatic check you can run on any new structure it proposes. That is the role Lean plays for proofs, and it is why materials moved fast.</li>
+<li><strong>AlphaFold</strong> is the softer, more instructive case. It had no automatic checker for a brand-new prediction. What it had was the Protein Data Bank, a vast store of experimentally solved structures to train and measure against. That is not a verifier, it is a deep bank of known-correct answers, and confirming a genuinely new prediction can still take a wet lab. It is one notch down the axis, enough to move fast, not enough to close the loop on novel claims automatically.</li>
+</ul>
+
+<p>
+That contrast is the thesis in working form. GNoME had a cheap automatic check, AlphaFold had an expensive real one plus a rich archive, and robotics has neither. A domain accelerates in proportion to how far up that axis it sits, and most domains sit near the bottom.
+</p>
+
+<p>
+Then there is math, where the axis has been climbing in public.
+</p>
+
+<ul>
+<li><strong>The Erdős problems, falling in real time.</strong> Since January 2026, a wave of problems from Thomas Bloom's <a href="https://www.erdosproblems.com/" target="_blank">erdosproblems.com</a> catalogue have moved from open to solved, many crediting a frontier model, tracked openly on <a href="https://github.com/teorth/erdosproblems/wiki/AI-contributions-to-Erd%C5%91s-problems" target="_blank">Terence Tao's catalogue wiki</a>. Problem #728 was the first resolved autonomously by an AI system, GPT-5.2 Pro paired with Harmonic's Aristotle, with the argument machine-checked <a href="https://arxiv.org/abs/2601.07421" target="_blank">in Lean</a>.</li>
+<li><strong>The unit-distance conjecture, disproved twice in a week.</strong> On 20 May 2026, an OpenAI reasoning model <a href="https://openai.com/index/model-disproves-discrete-geometry-conjecture/" target="_blank">disproved a conjecture in discrete geometry</a> that Erdős posed in 1946, with Princeton's Will Sawin refining it into the first improvement on the bound in roughly eighty years. Days later, Anthropic's Claude Mythos produced a second, shorter proof of the same result. Two frontier systems, no coordination, structurally similar proofs of one open problem, and as <a href="https://www.scientificamerican.com/article/ai-just-solved-an-80-year-old-erdos-problem-and-mathematicians-are-amazed/" target="_blank">Scientific American reported</a>, mathematicians read it as the first genuinely new result of its kind produced autonomously by AI rather than an answer retrieved.</li>
+</ul>
+
+<p>
+That last distinction is the argument in miniature. Back in October 2025, frontier models were reported to have solved a handful of Erdős problems, and on closer look they had mostly surfaced existing papers rather than produced new arguments. Retrieval dressed up as discovery. By 2026 that changed, and it is worth being exact about what changed, because the obvious answer is not the right one.
+</p>
+
+<h2>The model is a hill-climber</h2>
+
+<p>
+The models did get bigger, and that mattered. Bigger models with more compute and purpose-built RL environments had the capacity to navigate a narrow search space and the test-time budget to do it fast. But scale is not what changed the character of the results. Sitting at the centre of every one of these systems is something cheap, an automatic verifier running inside the loop. It scores every attempt for nothing, prunes what fails, and after each round the model draws its next attempts closer to what survived. You can watch the concentration happen in RL post-training, where pass@k falls as pass@1 rises, the output distribution collapsing toward the verified answer. Big models and compute built the engine, and the cheap verifier tells the engine which way is up. And that same signal does double duty, telling the community a result is real rather than retrieved while it teaches the model to produce real results in the first place.
+</p>
+
+<p>
+Seen this way, a frontier model with a verifier is a hill-climbing optimizer, and a very good one. The verifier defines the landscape, pass or fail on a proof, a test suite, an energy calculation, and the model climbs. Each iteration proposes, the verifier scores, the weak branches die, and the next round samples nearer the top. This is why spending more compute at inference time pays off in these domains and almost nowhere else. More test-time compute buys a longer, sharper climb, but only when a cheap signal at every step tells the model whether it is going up or down. Take that signal away and the extra compute just buys more wandering.
+</p>
+
+<div class="post-fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 360" width="100%" role="img" aria-labelledby="sc-title sc-desc" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="sc-title">A cheap verifier turns a search into a hill-climb</title>
+  <desc id="sc-desc">Left to right, a wide scatter of candidate answers is pruned round by round by a verifier, so the surviving points concentrate and move toward a single verified answer on the right.</desc>
+  <style>
+    #sc-title, #sc-desc { display:none; }
+    svg { --fig-text: var(--text, #1a1a1a); }
+    @media (prefers-color-scheme: dark) { svg { --fig-text: var(--text, #e8e8ea); } }
+    .mut { fill: var(--fig-text); opacity: .6; }
+    .lab { fill: var(--fig-text); opacity: .82; font-weight: 500; }
+    .dm { fill: var(--fig-text); opacity: .30; }
+    .dg { fill: var(--fig-text); opacity: .12; }
+  </style>
+  <defs>
+    <marker id="arw" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0d9488"/></marker>
+  </defs>
+  <text class="mut" x="95"  y="52" font-size="12" text-anchor="middle">Round 0</text>
+  <text class="mut" x="250" y="52" font-size="12" text-anchor="middle">Round 1</text>
+  <text class="mut" x="405" y="52" font-size="12" text-anchor="middle">Round 2</text>
+  <text class="mut" x="560" y="52" font-size="12" text-anchor="middle">Verified</text>
+  <path d="M60,92 C230,112 400,144 585,154 L585,168 C400,178 230,208 60,228 Z" fill="#0d9488" fill-opacity="0.07"/>
+  <line x1="132" y1="168" x2="545" y2="161" stroke="#0d9488" stroke-opacity="0.65" stroke-width="2" marker-end="url(#arw)"/>
+  <circle class="dg" cx="150" cy="108" r="4"/><circle class="dg" cx="164" cy="238" r="4"/>
+  <circle class="dg" cx="308" cy="118" r="4"/><circle class="dg" cx="318" cy="226" r="4"/><circle class="dg" cx="452" cy="140" r="4"/>
+  <circle class="dm" cx="68"  cy="110" r="4"/><circle class="dm" cx="92"  cy="124" r="4"/>
+  <circle fill="#0d9488" cx="74"  cy="146" r="4"/><circle class="dm" cx="108" cy="138" r="4"/>
+  <circle class="dm" cx="66"  cy="168" r="4"/><circle fill="#0d9488" cx="98"  cy="176" r="4"/>
+  <circle class="dm" cx="82"  cy="196" r="4"/><circle class="dm" cx="112" cy="206" r="4"/>
+  <circle class="dm" cx="72"  cy="216" r="4"/><circle class="dm" cx="102" cy="110" r="4"/>
+  <circle fill="#0d9488" cx="88"  cy="158" r="4"/><circle class="dm" cx="116" cy="184" r="4"/>
+  <circle class="dm" cx="80"  cy="128" r="4"/><circle class="dm" cx="96"  cy="200" r="4"/>
+  <circle class="dm" cx="70"  cy="186" r="4"/><circle fill="#0d9488" cx="110" cy="160" r="4"/>
+  <circle class="dm" cx="232" cy="138" r="4"/><circle fill="#0d9488" cx="256" cy="150" r="4"/>
+  <circle fill="#0d9488" cx="238" cy="168" r="4"/><circle class="dm" cx="262" cy="182" r="4"/>
+  <circle class="dm" cx="244" cy="128" r="4"/><circle fill="#0d9488" cx="254" cy="192" r="4"/>
+  <circle fill="#0d9488" cx="248" cy="164" r="4"/><circle fill="#0d9488" cx="260" cy="142" r="4"/>
+  <circle fill="#0d9488" cx="392" cy="152" r="4"/><circle fill="#0d9488" cx="414" cy="164" r="4"/>
+  <circle fill="#0d9488" cx="398" cy="176" r="4"/><circle fill="#0d9488" cx="418" cy="152" r="4"/>
+  <circle class="dm" cx="404" cy="170" r="4"/>
+  <circle cx="560" cy="161" r="10" fill="none" stroke="#0d9488" stroke-width="2"/>
+  <circle cx="560" cy="161" r="4.5" fill="#0d9488"/>
+  <text class="lab" x="40" y="262" font-size="12.5">many candidates</text>
+  <text class="mut" x="40" y="279" font-size="11.5">pass@k high, pass@1 low</text>
+  <text class="lab" x="560" y="205" font-size="12.5" text-anchor="middle">verified answer</text>
+  <text class="mut" x="560" y="222" font-size="11.5" text-anchor="middle">pass@1 high</text>
+  <text class="mut" x="24" y="320" font-size="12.5">A cheap verifier prunes every failed attempt, so each round the model's outputs concentrate</text>
+  <text class="mut" x="24" y="338" font-size="12.5">toward what checks out. The search becomes a climb.</text>
+</svg>
+</div>
+
+<p>
+But hill-climbing has a ceiling that is easy to mistake for a floor. It optimizes inside a landscape it was handed, and it never questions the landscape. That is fine when the reward genuinely defines success. A proof that type-checks is correct. A program that passes every hidden test does the job, even when the code is ugly and inelegant, because passing the tests was the whole objective. Push a model to write in a low-resource or esoteric programming language it barely saw in pretraining and judge it only on hidden test cases, and you get exactly that, code that clears the bar without being efficient or graceful, because clearing the bar was the entire target. And without pretraining data or a ready-made environment to bootstrap the climb, even that much is out of reach.
+</p>
+
+<p>
+This is a different thing from the kind of discovery that overturns a prior. A model shaped by vast pretraining arrives with strong beliefs about how the world works, and hill-climbing sharpens those beliefs rather than dislodging them. Change the rules underneath it, shift the laws of motion, alter gravity so the world stops matching what the model already knows, and it has no cheap route to adapt, because adapting would mean contradicting the very priors that pretraining spent trillions of tokens installing. We already see the outline of this in weak generalization and the near-absence of real inference-time learning. And the one lever that made math and code work, cheap unlimited verified attempts, is exactly the lever a genuinely novel domain takes away. You cannot run a million rollouts against a world that does not exist yet, and transformers are hungry enough for data that without those rollouts they have very little to learn from. Data efficiency, not raw capability, is the wall.
+</p>
+
+<p>
+So the honest version of the last two years is narrower than <em>models can discover</em>. Specialized models can hill-climb, superbly, in any domain that ships a verifier and enough data to start the climb. That is real and useful and should not be undersold. It is also not the same as solving an open-ended problem whose answer requires abandoning what the model already believes, and the two are worth keeping apart.
+</p>
+
+<h2>The market has already priced this in</h2>
+
+<p>
+The clearest evidence that ground truth is the scarce resource is where the money is going. Almost without exception, the most heavily funded AI startups of the past year are in one business, building verifiers, simulators, and graded environments. Not the models, but the environments the models have to learn in.
+</p>
+
+<ul>
+<li><strong>Axiom</strong> (<a href="https://axiommath.ai/" target="_blank">axiommath.ai</a>) builds a reasoning engine that writes every step in Lean so it is machine-checkable, and raised a <a href="https://siliconangle.com/2026/03/12/verifiable-ai-startup-axiom-raises-200m-prove-ai-generated-code-safe-use/" target="_blank">$200M Series A at a $1.6B valuation</a> led by Menlo Ventures. AxiomProver scored a perfect 120 out of 120 on Putnam 2025. The pitch is the thesis stated outright, that because the output is checked by a deterministic verifier, verified data feeds back into training in a self-improvement loop gated only by compute.</li>
+<li><strong>Harmonic's Aristotle</strong> formally verifies each reasoning step in Lean4, reached IMO gold in 2025, and raised a <a href="https://siliconangle.com/2026/01/15/nvidias-nventures-backs-harmonic-ai-series-c-mathematical-superintelligence/" target="_blank">$120M Series C at $1.45B</a>. It is the same Aristotle that co-resolved Erdős #728.</li>
+<li><strong>Prime Intellect</strong> is building what has been called the "Hugging Face for RL environments," and its core open-source library is named, plainly, <a href="https://github.com/PrimeIntellect-ai/verifiers" target="_blank"><em>verifiers</em></a>. The entire product is reward functions and graded environments.</li>
+<li><strong>Mechanize</strong> builds RL environments for software engineering and works with Anthropic, which has <a href="https://techcrunch.com/2025/09/21/silicon-valley-bets-big-on-environments-to-train-ai-agents/" target="_blank">talked about spending over $1B on RL environments</a> in a year.</li>
+<li><strong>Periodic Labs</strong> is the case that matters most for the physical world. Founded by former OpenAI and DeepMind researchers, it raised a <a href="https://techcrunch.com/2025/09/30/former-openai-and-deepmind-researchers-raise-whopping-300m-seed-to-automate-science/" target="_blank">$300M seed</a> and was later reported to be in talks to raise around $500M at a $7.5B valuation. It builds robotic labs that run real physical experiments, and describes the work in almost these exact terms, a physical reward function, where the ground truth is the experiment and nature is the RL environment. It is not buying a verifier off the shelf, because physics does not ship one. It is constructing the apparatus that produces ground truth, the physical equivalent of Lean, assembled out of robots and instruments.</li>
+</ul>
+
+<p>
+Read the map top to bottom and the same logic runs through it. Where a cheap formal verifier already exists, in math and code, startups race to exploit it and turn machine-checked proofs into a recursive training loop. Where none exists, in physical science, they spend hundreds of millions manufacturing an expensive one. There is no third route where the discoveries show up and nobody had to pay for the ground truth. You inherit it or you build it.
+</p>
+
+<h2>The domains where the breakthroughs are not happening</h2>
+
+<p>
+Flip the lens. The domains that have stayed conspicuously quiet are exactly the ones near the bottom of the axis.
+</p>
+
+<ul>
+<li><strong>Robotics and driving.</strong> No function takes a ten-second clip of a robot folding a shirt, or a car merging onto a motorway, and returns correct. "Drove like a careful human" is not a formula. The reward is whatever was in the demonstrator's head, and it was never written down.</li>
+<li><strong>Most of biology and drug discovery.</strong> Structure prediction got its archive, but the rest of biology has neither a cheap check nor a rich one. Whether a designed molecule helps depends on binding, stability, toxicity, manufacturability, and efficacy in a living system, all measured slowly and noisily in a wet lab. The model that cracks "what shape is this protein" has little to grind against once the question becomes "will this drug help a patient," because that answer takes months and a clinical trial, not a millisecond and a checker.</li>
+<li><strong>Open-ended science.</strong> New physics, new materials, genuinely novel concepts. By definition there is no oracle that says "yes, this new idea is true." The check does not exist yet, because the thing being checked is new.</li>
+</ul>
+
+<p>
+In each, the bottleneck is not the model's intelligence. Take the system that just solved the IMO and drop it into a robotics lab, and it has nowhere to climb. Nothing tells it which attempts were any good. A superhuman searcher with no verifier is still guessing, and guessing cannot tell progress from noise.
+</p>
+
+<h2>Why robotics is stuck, specifically</h2>
+
+<p>
+Reinforcement learning has a prerequisite that is easy to skate past. It needs a reward function, some signal r(s, a) for how good it is to take action a in state s. All the machinery, from value iteration and policy gradients to actor-critic methods like PPO and SAC, assumes that reward was already handed to you. In math and code, it was. In robotics, it almost never is.
+</p>
+
+<p>
+What you actually have in a real robotics setting is two things, and the reward is not one of them. You have an <strong>environment</strong> you can act in. And you have a handful of <strong>expert demonstrations</strong>, a person teleoperating the arm, driving the car, showing the task a few dozen times. That is the whole starting kit.
+</p>
+
+<p>
+You can hand-write a reward, and people do. Reward shaping is behind a lot of genuinely impressive robot learning, from legged locomotion to in-hand manipulation to drone racing. But a hand-written reward is brittle. It fits the one task you tuned it for, and the policy learns to optimise exactly what you wrote down instead of what you meant. That failure has a name, reward hacking, and anyone who has done this has watched it happen in real time. What a hand-crafted reward will never do is stretch to the open-ended "do the sensible thing in a situation nobody planned for" behaviour that real autonomy needs. For that you need a reward that captures what the expert was actually after.
+</p>
+
+<h2>The workarounds all hit the same wall</h2>
+
+<p>
+If there is no cheap verifier, the natural move is to substitute something for it, and the field has tried the obvious substitutes. Each one works a little, and each one runs into the same limit.
+</p>
+
+<p>
+The first is to put a human in the loop, which for robotics and open-ended science is right now one of the few genuinely feasible options, and a lot of good work is going into it. A person watches, corrects, labels, intervenes when the robot fumbles or the experiment goes sideways. This is imitation learning and its interactive cousins, and it produces real systems. But a human in the loop is the opposite of cheap and automatic. Every correction is a person's minute, every labelled rollout is human attention that does not parallelize, and the moment you need a thousand times more data you need a thousand times more people. The verifier that made math scale cost nothing per call. This one costs a human per call, and that single fact caps how far it goes.
+</p>
+
+<p>
+The second is to lean on rollouts the way math and code do, and here the economics simply do not transfer. In a proof or a program you can spin up a million parallel attempts for the price of compute. In robotics, biology, or materials science, a rollout is a real experiment. It runs in real time, uses physical apparatus, often needs a person to set up and reset, and you cannot conjure a million hypotheses to test in parallel the way you can sample a million candidate programs. Running the experiments is the expensive part, and it does not fall with the compute curve.
+</p>
+
+<p>
+Even setting cost aside, there is a deeper problem in how little each expensive rollout teaches. Conventional RL post-training with an automatic reward extracts very few bits from each trajectory. The reward comes at the end, pass or fail on the whole hypothesis, and a long rollout of hundreds or thousands of steps of rich interaction collapses into that single terminal bit. In math the rollout is cheap, so wasting most of its information does not hurt. In the physical world the rollout is the expensive thing, and throwing away almost everything that happened inside it is exactly the waste you cannot afford. You paid for a whole experiment and learned one bit from it.
+</p>
+
+<p>
+Long horizons make it worse. These rollouts run for many steps and demand long context windows, and a terminal reward tells you the attempt failed without telling you which step was the mistake, so credit assignment gets diluted across the whole trajectory. Figuring out where it went wrong, how to fix it, and how to try again is often a job for a human rather than something the verifier hands you. The verifier reports only the final outcome, whatever the experiment was. And scaling that diagnosis is where the loop breaks. Each fix means re-scaffolding a fresh attempt, which costs more time, more compute, and more human hours, and you are back at the same wall from a different direction. The problem was never the model's capacity to search. It is that each rollout is expensive, teaches almost nothing per unit cost, and cannot be automated the way a cheap verifier automates itself. Data efficiency, the ability to learn far more than a single terminal reward from each costly attempt, is the thing standing in the way.
+</p>
+
+<p>
+So the workarounds do not fail because they are wrong. They fail because none of them recovers the property that made math and code work, a signal cheap enough to run without limit and informative enough to learn from at every step. That is the gap the next section is about.
+</p>
+
+<p class="pullquote">
+In math, the reward is handed to you. In robotics, you have to recover it first. That recovery step is inverse reinforcement learning, the robotics analogue of having Lean for math.
+</p>
+
+<h2>Inverse RL recovers the verifier from demonstrations</h2>
+
+<p>
+Inverse reinforcement learning is built for exactly this gap. You hand it expert demonstrations and an environment, and it hands back a reward or cost function that explains what the expert was doing. Once you have that recovered reward, you are back in the world where ordinary RL works. You can plan against it, optimise against it, re-solve for a fresh policy the moment the situation changes. You did not inherit a verifier, so you learn one.
+</p>
+
+<div class="post-fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 350" width="100%" role="img" aria-labelledby="irl-title irl-desc" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="irl-title">Standard RL versus inverse RL</title>
+  <desc id="irl-desc">In standard RL a reward function is given, then an RL algorithm produces a policy. In inverse RL, expert demonstrations and an environment are fed to inverse RL to recover a reward function, which then feeds the same RL algorithm and policy.</desc>
+  <style>
+    #irl-title, #irl-desc { display:none; }
+    svg { --fig-text: var(--text, #1a1a1a); }
+    @media (prefers-color-scheme: dark) { svg { --fig-text: var(--text, #e8e8ea); } }
+    .ttl { fill: var(--fig-text); font-weight: 500; }
+    .note{ fill: var(--fig-text); opacity: .6; }
+    .bx  { fill: var(--fig-text); }
+    rect.box { fill: none; stroke: var(--fig-text); stroke-opacity: .4; stroke-width: 1.4; }
+    rect.reward { fill: #0d9488; fill-opacity: .12; stroke: #0d9488; stroke-opacity: 1; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="a3" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#8a8f98"/></marker>
+  </defs>
+  <text class="ttl" x="24" y="34" font-size="14.5">Standard RL (what math and code get)</text>
+  <rect class="reward" x="286" y="56" width="128" height="46" rx="7"/>
+  <text class="bx" x="350" y="75" font-size="12.5" text-anchor="middle">Reward function<tspan x="350" dy="15">(given)</tspan></text>
+  <rect class="box" x="446" y="56" width="104" height="46" rx="7"/>
+  <text class="bx" x="498" y="83" font-size="12.5" text-anchor="middle">RL algorithm</text>
+  <rect class="box" x="582" y="56" width="86" height="46" rx="7"/>
+  <text class="bx" x="625" y="83" font-size="12.5" text-anchor="middle">Policy</text>
+  <line x1="414" y1="79" x2="444" y2="79" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="550" y1="79" x2="580" y2="79" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <text class="note" x="286" y="122" font-size="12">The verifier is handed to you. The model just climbs.</text>
+  <line x1="350" y1="102" x2="350" y2="210" stroke="#0d9488" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <text class="ttl" x="24" y="184" font-size="14.5">Inverse RL (what robotics must do first)</text>
+  <rect class="box" x="20" y="196" width="120" height="34" rx="7"/>
+  <text class="bx" x="80" y="211" font-size="11.5" text-anchor="middle">Expert<tspan x="80" dy="14">demonstrations</tspan></text>
+  <rect class="box" x="20" y="238" width="120" height="34" rx="7"/>
+  <text class="bx" x="80" y="259" font-size="12.5" text-anchor="middle">Environment</text>
+  <rect class="box" x="162" y="210" width="104" height="46" rx="7"/>
+  <text class="bx" x="214" y="237" font-size="12.5" text-anchor="middle">Inverse RL</text>
+  <rect class="reward" x="286" y="210" width="128" height="46" rx="7"/>
+  <text class="bx" x="350" y="229" font-size="12.5" text-anchor="middle">Recovered reward<tspan x="350" dy="15">function</tspan></text>
+  <rect class="box" x="446" y="210" width="104" height="46" rx="7"/>
+  <text class="bx" x="498" y="237" font-size="12.5" text-anchor="middle">RL algorithm</text>
+  <rect class="box" x="582" y="210" width="86" height="46" rx="7"/>
+  <text class="bx" x="625" y="237" font-size="12.5" text-anchor="middle">Policy</text>
+  <line x1="140" y1="213" x2="160" y2="228" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="140" y1="255" x2="160" y2="240" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="266" y1="233" x2="284" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="414" y1="233" x2="444" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="550" y1="233" x2="580" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <text class="note" x="20" y="292" font-size="12">No verifier exists, so you recover one from demonstrations, then run ordinary RL against it.</text>
+</svg>
+</div>
+
+<p>
+This is more than a sample-efficiency trick. Three things make a recovered reward the right target rather than a convenient one.
+</p>
+
+<ul>
+<li><strong>It is the missing signal.</strong> Behavioural cloning copies actions and breaks the moment the robot reaches a state the expert never demonstrated. A reward function generalises, because it scores <em>any</em> state, including unseen ones. It is the difference between memorising answers and understanding the rubric.</li>
+<li><strong>It transfers out of distribution.</strong> A reward defined over features, rather than over a specific map or scene, can be re-planned against in a new environment. The policy is tied to where it was trained, the reward is portable. For the physical world, where the test distribution is never the training distribution, that portability is the whole game.</li>
+<li><strong>It is inspectable.</strong> A recovered reward can be read, audited, combined with other objectives, and corrected. A black-box policy cannot. For safety-critical robotics, having the objective written down is not optional.</li>
+</ul>
+
+<p>
+It is worth being clear about what a recovered reward is and is not. It is a learned reward model, a stand-in for the verifier the domain never shipped. It is not a ground-truth signal handed down for free, and it does not magically hand you a dense per-step reward. What it does give you is a function you can evaluate anywhere, which is what lets you plan and generalise. Whether a learned reward can also be made to squeeze far more signal out of each costly rollout, and close the data-efficiency gap, is one of the goals of this line of work, not something it has already delivered. I name it as the prize, not as a solved problem.
+</p>
+
+<p>
+Now the honest objection, because it is the one the whole bet turns on. A skeptic can grant everything above and still say that math and code were tractable because they are <em>formal</em>, that the ground truth is cheap because the domain is symbolic, and no amount of cleverness makes the physical world symbolic. Worse, inverse RL is provably ill-posed. Many different reward functions explain the same demonstrations equally well, so recovering the reward is underdetermined, and a badly recovered reward can be gamed exactly like a hand-written one. Maybe "drove like a careful human" has no compact ground truth at all, and the ill-posedness is not an engineering gap that closes but a wall that does not move.
+</p>
+
+<p>
+I take this seriously, and I think the honest answer is that it is partly right, and that is fine. Inverse RL does not need to recover the one true reward. It needs to recover a reward good enough to plan against and cheap enough to iterate on, a working verifier rather than a perfect one, the same bargain that GNoME's energy calculation or a noisy wet-lab assay already strikes. As for why now, the classical reason inverse RL stalled for two decades was not the ill-posedness, which was always survivable. It was the need for good hand-designed features for the reward to live on, which quietly handed the hard part back to a human. Foundation models supply those features for free. A pretrained vision or video model already encodes what is happening in a scene well enough to learn a reward on top of it, and world models push this further still. Where a language model learns the statistical structure of text, a world model learns the statistical structure of space and time. It learns how objects move and respond to force, which is exactly the compressed abstraction of the physical world a recovered reward needs to live on. This is the bet behind Fei-Fei Li's World Labs and Yann LeCun's AMI Labs, that these learned abstractions of the world will eventually transfer to physical AI, and it is the same representational leap that makes inverse RL tractable now. The representation problem that stalled it for twenty years is exactly what modern models are best at. That does not make the wall disappear, it lowers it to something you can climb.
+</p>
+
+<p>
+So the path to agents that work in the real world runs through the same ingredient that unlocked math and code, acquired differently. Math and code were handed their verifiers. Robotics has to <em>learn</em> its verifier from demonstrations before it can do anything else. That learning problem is inverse RL, and it is the most important under-worked problem I know of between today's models and agents that act competently in the physical world.
+</p>
+
+<h2>The bet</h2>
+
+<p>
+The optimistic reading of the last two years is that models are getting smart enough to discover things. The sharper reading is narrower. Models discover things where the ground truth is cheap, exact, and automatic, and almost nowhere else. Even there, they are hill-climbing a landscape someone handed them rather than inventing a new one. If that is right, the rate-limiting step for AI in the physical world is not a bigger model. It is a correct reward function in the domains that do not ship with one.
+</p>
+
+<p>
+And we have seen what a verifier does once it is inside the loop. It stops checking answers after the fact and starts teaching the model in the first place, and at inference time it becomes the signal that lets the model climb instead of wander. Where a verifier exists, that loop compounds on itself and each round of training makes the next one sharper. Where it does not, there is no loop to start at all, however capable the raw model gets. Capability was never the thing in short supply. What has been missing all along is the signal.
+</p>
+
+<div class="post-fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" width="100%" role="img" aria-label="A rising staircase of model capability over training rounds. With a cheap verifier, each round turns the model's verified wins into training data so the next model starts higher and capability compounds. Without a verifier the line stays flat." preserveAspectRatio="xMidYMid meet" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <style>
+    svg { --fig-text: var(--text, #1a1a1a); }
+    @media (prefers-color-scheme: dark) { svg { --fig-text: var(--text, #e8e8ea); } }
+    .ttl { fill: var(--fig-text); font-weight: 500; }
+    .mut { fill: var(--fig-text); opacity: .58; }
+  </style>
+  <defs>
+    <marker id="cup" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0d9488"/></marker>
+  </defs>
+  <text class="ttl" x="24" y="30" font-size="16.5">Where a verifier exists, the loop compounds</text>
+  <line x1="70" y1="268" x2="70" y2="86" stroke="var(--fig-text)" stroke-opacity=".22" stroke-width="1" marker-end="url(#cup)"/>
+  <text class="mut" x="76" y="90" font-size="11">model capability</text>
+  <line x1="70" y1="268" x2="646" y2="268" stroke="var(--fig-text)" stroke-opacity=".22" stroke-width="1"/>
+  <line x1="120" y1="243" x2="612" y2="243" stroke="#9aa2ad" stroke-width="1.6" stroke-dasharray="5 4" opacity=".7"/>
+  <text x="610" y="236" font-size="11.5" text-anchor="end" fill="#9aa2ad">without a verifier, capability stays flat</text>
+  <g stroke="#0d9488" stroke-opacity=".22" stroke-width="1.5">
+    <line x1="120" y1="243" x2="120" y2="268"/><line x1="268" y1="203" x2="268" y2="268"/><line x1="416" y1="160" x2="416" y2="268"/><line x1="560" y1="116" x2="560" y2="268"/>
+  </g>
+  <path d="M120,243 L268,203 L416,160 L560,116" fill="none" stroke="#0d9488" stroke-width="2.6" marker-end="url(#cup)"/>
+  <circle cx="120" cy="243" r="6" fill="#0d9488"/><circle cx="268" cy="203" r="6" fill="#0d9488"/><circle cx="416" cy="160" r="6" fill="#0d9488"/><circle cx="560" cy="116" r="6" fill="#0d9488"/>
+  <text x="194" y="212" font-size="10.5" text-anchor="middle" fill="#0d9488">verify + train</text>
+  <text x="342" y="169" font-size="10.5" text-anchor="middle" fill="#0d9488">verify + train</text>
+  <text x="488" y="126" font-size="10.5" text-anchor="middle" fill="#0d9488">verify + train</text>
+  <text class="mut" x="120" y="288" font-size="11.5" text-anchor="middle">base model</text>
+  <text class="mut" x="268" y="288" font-size="11.5" text-anchor="middle">round 1</text>
+  <text class="mut" x="416" y="288" font-size="11.5" text-anchor="middle">round 2</text>
+  <text class="mut" x="560" y="288" font-size="11.5" text-anchor="middle">round 3</text>
+  <text class="mut" x="24" y="316" font-size="12.5">Each round the verifier turns the model's own verified wins into training data, so the next model</text>
+  <text class="mut" x="24" y="333" font-size="12.5">starts higher. Remove the verifier and there is no loop, and the line never lifts off the floor.</text>
+</svg>
+</div>
+
+<p>
+For the physical world, the only way to get that signal is to recover it from the one kind of data you actually have, expert behaviour. That is the whole bet behind taking inverse RL seriously again, not as a curiosity from the 2000s but as the missing verifier for every domain where intelligence has so far been left searching in the dark.
+</p>
+
+<p>
+One last thread, which I will leave for its own essay. The verifier does not only earn its keep during training. At inference time it turns a vast space of possible answers into one you can actually search, letting the model narrow to the right region and climb to something that checks out, and the stronger the model, the faster that space collapses. The verifier stops being a grader and becomes a compass. How much frontier models really shrink that search, and how fast, is something I have been measuring. But that is for another time.
+</p>
+
+<div class="post-footer-note">
+<p>This essay is the conceptual motivation behind my series on inverse reinforcement learning. The first post, on the two founding algorithms, is <a href="inverse-rl-classical.html">here</a>.</p>
+</div>
+
+<h2>References</h2>
+
+<ol class="references-list" style="font-size:14px;">
+<li>DeepMind, <a href="https://deepmind.google/discover/blog/ai-solves-imo-problems-at-silver-medal-level/" target="_blank">"AI achieves silver-medal standard solving International Mathematical Olympiad problems"</a>, 2024 (AlphaProof and AlphaGeometry 2).</li>
+<li>Romera-Paredes, B. et al., <strong>"Mathematical discoveries from program search with large language models,"</strong> <em>Nature</em>, 2023 (FunSearch).</li>
+<li>Fawzi, A. et al., <strong>"Discovering faster matrix multiplication algorithms with reinforcement learning,"</strong> <em>Nature</em>, 2022 (AlphaTensor).</li>
+<li>Mankowitz, D. et al., <strong>"Faster sorting algorithms discovered using deep reinforcement learning,"</strong> <em>Nature</em>, 2023 (AlphaDev).</li>
+<li>DeepSeek-AI, <strong>"DeepSeek-R1,"</strong> 2025 (reinforcement learning with verifiable rewards).</li>
+<li>Thomas Bloom, <a href="https://www.erdosproblems.com/" target="_blank">erdosproblems.com</a>, the open catalogue of Erdős problems.</li>
+<li>Terence Tao et al., <a href="https://github.com/teorth/erdosproblems/wiki/AI-contributions-to-Erd%C5%91s-problems" target="_blank">"AI contributions to Erdős problems"</a>, the openly maintained tracking wiki, 2026.</li>
+<li><a href="https://arxiv.org/abs/2601.07421" target="_blank">"Resolution of Erdős Problem #728"</a>, arXiv, 2026 (GPT-5.2 Pro with Harmonic's Aristotle, machine-checked in Lean).</li>
+<li>OpenAI, <a href="https://openai.com/index/model-disproves-discrete-geometry-conjecture/" target="_blank">"An OpenAI model has disproved a central conjecture in discrete geometry"</a>, 20 May 2026, with the problem page at <a href="https://www.erdosproblems.com/90" target="_blank">erdosproblems.com/90</a> (Erdős's 1946 unit-distance problem).</li>
+<li>The Decoder, <a href="https://the-decoder.com/claude-mythos-reportedly-solves-openais-landmark-erdos-problem-with-a-cute-simple-proof/" target="_blank">"Claude Mythos reportedly solves OpenAI's landmark Erdős problem with a cute, simple proof"</a>, May 2026.</li>
+<li>Scientific American, <a href="https://www.scientificamerican.com/article/ai-just-solved-an-80-year-old-erdos-problem-and-mathematicians-are-amazed/" target="_blank">"AI just solved an 80-year-old Erdős problem, and mathematicians are amazed"</a>, 2026.</li>
+<li>Axiom, <a href="https://axiommath.ai/" target="_blank">axiommath.ai</a>; Menlo Ventures, "AI Will Write All the Code. Mathematics Will Prove It Works," March 2026; SiliconANGLE, <a href="https://siliconangle.com/2026/03/12/verifiable-ai-startup-axiom-raises-200m-prove-ai-generated-code-safe-use/" target="_blank">"Verifiable AI startup Axiom raises $200M,"</a> 12 March 2026.</li>
+<li>Harmonic, Aristotle (Lean4 verification); Business Wire and <a href="https://siliconangle.com/2026/01/15/nvidias-nventures-backs-harmonic-ai-series-c-mathematical-superintelligence/" target="_blank">SiliconANGLE</a>, "Harmonic raises $120M Series C at $1.45B valuation," 25 November 2025.</li>
+<li>Prime Intellect, the <a href="https://github.com/PrimeIntellect-ai/verifiers" target="_blank">"verifiers" RL-environment library</a>; TechCrunch, <a href="https://techcrunch.com/2025/09/21/silicon-valley-bets-big-on-environments-to-train-ai-agents/" target="_blank">"Silicon Valley bets big on environments to train AI agents,"</a> 2025.</li>
+<li>Periodic Labs; TechCrunch, <a href="https://techcrunch.com/2025/09/30/former-openai-and-deepmind-researchers-raise-whopping-300m-seed-to-automate-science/" target="_blank">"Former OpenAI and DeepMind researchers raise whopping $300M seed to automate science,"</a> 30 September 2025; Forbes, <a href="https://www.forbes.com/sites/iainmartin/2026/05/07/former-openai-researcher-to-raise-500-million-for-ai-science-startup/" target="_blank">"Former OpenAI Researcher To Raise $500 Million For AI Science Startup,"</a> 7 May 2026 (reported in talks to raise ~$500M at a ~$7.5B valuation, not yet closed).</li>
+<li>Fei-Fei Li and the World Labs team, <a href="https://drfeifei.substack.com/p/a-functional-taxonomy-of-world-models" target="_blank">"A Functional Taxonomy of World Models,"</a> 3 June 2026; on Yann LeCun's <a href="https://www.technologyreview.com/2026/01/22/1131661/yann-lecuns-new-venture-ami-labs/" target="_blank">AMI Labs (Advanced Machine Intelligence)</a> and world models for physical AI, 2026 coverage.</li>
+<li>Ng, A. &amp; Russell, S., <strong>"Algorithms for Inverse Reinforcement Learning,"</strong> ICML, 2000.</li>
+<li>Abbeel, P. &amp; Ng, A., <strong>"Apprenticeship Learning via Inverse Reinforcement Learning,"</strong> ICML, 2004.</li>
+</ol>
+
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">&copy; 2026 Aman Sharma. All rights reserved.</div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

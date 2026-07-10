@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 350" width="100%" role="img" aria-labelledby="irl-title irl-desc" preserveAspectRatio="xMidYMid meet" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="irl-title">Standard RL versus inverse RL</title>
+  <desc id="irl-desc">Two pipelines. In standard RL a reward function is given, then an RL algorithm produces a policy. In inverse RL, expert demonstrations and an environment are fed to inverse RL to recover a reward function, which then feeds the same RL algorithm and policy. The recovered reward box sits in the same slot as the given reward box.</desc>
+  <style>
+    svg { --fig-text: var(--text, #1a1a1a); }
+    @media (prefers-color-scheme: dark) { svg { --fig-text: var(--text, #e8e8ea); } }
+    .ttl { fill: var(--fig-text); font-weight: 500; }
+    .note{ fill: var(--fig-text); opacity: .6; }
+    .bx  { fill: var(--fig-text); }
+    rect.box { fill: none; stroke: var(--fig-text); stroke-opacity: .4; stroke-width: 1.4; }
+    rect.reward { fill: #0d9488; fill-opacity: .12; stroke: #0d9488; stroke-opacity: 1; stroke-width: 1.6; }
+  </style>
+  <defs>
+    <marker id="a3" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 Z" fill="#8a8f98"/></marker>
+  </defs>
+
+  <!-- ROW 1 : Standard RL -->
+  <text class="ttl" x="24" y="34" font-size="14.5">Standard RL (what math and code get)</text>
+  <rect class="reward" x="286" y="56" width="128" height="46" rx="7"/>
+  <text class="bx" x="350" y="75" font-size="12.5" text-anchor="middle">Reward function<tspan x="350" dy="15">(given)</tspan></text>
+  <rect class="box" x="446" y="56" width="104" height="46" rx="7"/>
+  <text class="bx" x="498" y="83" font-size="12.5" text-anchor="middle">RL algorithm</text>
+  <rect class="box" x="582" y="56" width="86" height="46" rx="7"/>
+  <text class="bx" x="625" y="83" font-size="12.5" text-anchor="middle">Policy</text>
+  <line x1="414" y1="79" x2="444" y2="79" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="550" y1="79" x2="580" y2="79" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <text class="note" x="286" y="122" font-size="12">The verifier is handed to you. The model just climbs.</text>
+
+  <!-- dashed guide connecting the two reward boxes -->
+  <line x1="350" y1="102" x2="350" y2="210" stroke="#0d9488" stroke-opacity=".55" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+  <!-- ROW 2 : Inverse RL -->
+  <text class="ttl" x="24" y="184" font-size="14.5">Inverse RL (what robotics must do first)</text>
+  <rect class="box" x="20" y="196" width="120" height="34" rx="7"/>
+  <text class="bx" x="80" y="211" font-size="11.5" text-anchor="middle">Expert<tspan x="80" dy="14">demonstrations</tspan></text>
+  <rect class="box" x="20" y="238" width="120" height="34" rx="7"/>
+  <text class="bx" x="80" y="259" font-size="12.5" text-anchor="middle">Environment</text>
+  <rect class="box" x="162" y="210" width="104" height="46" rx="7"/>
+  <text class="bx" x="214" y="237" font-size="12.5" text-anchor="middle">Inverse RL</text>
+  <rect class="reward" x="286" y="210" width="128" height="46" rx="7"/>
+  <text class="bx" x="350" y="229" font-size="12.5" text-anchor="middle">Recovered reward<tspan x="350" dy="15">function</tspan></text>
+  <rect class="box" x="446" y="210" width="104" height="46" rx="7"/>
+  <text class="bx" x="498" y="237" font-size="12.5" text-anchor="middle">RL algorithm</text>
+  <rect class="box" x="582" y="210" width="86" height="46" rx="7"/>
+  <text class="bx" x="625" y="237" font-size="12.5" text-anchor="middle">Policy</text>
+
+  <line x1="140" y1="213" x2="160" y2="228" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="140" y1="255" x2="160" y2="240" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="266" y1="233" x2="284" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="414" y1="233" x2="444" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="550" y1="233" x2="580" y2="233" stroke="#8a8f98" stroke-width="1.6" marker-end="url(#a3)"/>
+  <text class="note" x="20" y="292" font-size="12">No verifier exists, so you recover one from demonstrations, then run ordinary RL against it.</text>
+</svg>
